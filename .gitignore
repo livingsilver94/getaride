@@ -102,3 +102,4 @@ ENV/
 
 # personal
 getaride/private_settings.py
+.idea/
