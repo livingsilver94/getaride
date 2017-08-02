@@ -32,15 +32,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.gis',
     'planner.apps.PlannerConfig',
-    'cities',
+    'cities_light',
     'leaflet',
 ]
 
@@ -120,3 +114,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# My settings
+
+CITIES_LIGHT_TRANSLATION_LANGUAGES = [LANGUAGE_CODE]
+
+CITIES_LIGHT_INCLUDE_COUNTRIES = [LANGUAGE_CODE.upper()]
+
+CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPLA', 'PPLA2', 'PPLA3']
