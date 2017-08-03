@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
+    'django.contrib.auth',
+    'django.contrib.staticfiles',
     'planner.apps.PlannerConfig',
     'dal',
     'dal_select2',
