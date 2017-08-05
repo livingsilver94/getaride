@@ -1,0 +1,4 @@
+django
+django-cities-light
+django-leaflet
+django-autocomplete-light
