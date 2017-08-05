@@ -34,6 +34,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'planner.apps.PlannerConfig',
+    'dal',
+    'dal_select2',
     'cities_light',
     'leaflet',
 ]
