@@ -36,8 +36,6 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.staticfiles',
     'planner.apps.PlannerConfig',
-    'dal',
-    'dal_select2',
     'cities_light',
     'leaflet',
 ]
