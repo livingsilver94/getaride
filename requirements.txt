@@ -1,4 +1,3 @@
 django
 django-cities-light
 django-leaflet
-django-bootstrap3-datepicker
