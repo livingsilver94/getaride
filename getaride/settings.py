@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'planner.apps.PlannerConfig',
     'cities_light',
     'leaflet',
+    'bootstrap3_datepicker',
 ]
 
 MIDDLEWARE = [
