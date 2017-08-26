@@ -1,0 +1,20 @@
+{% load static %}
+<script>
+    var autocomplete_url = "{% url 'planner:city-autocomplete' %}";
+    var coordinates_url = "{% url 'planner:city-coordinates' %}";
+</script>
+<script src="{% static 'planner/js/search_trip_form_init.js' %}"></script>
+<form id="journey_form" class="journey-form col-lg-6">
+    <h2> Organizza il tuo viaggio </h2>
+    <div id="journey_basic" class="journey-basic">
+        <div class="input-group">
+            <input type="text" id="searchtrip_origin" class="form-control">
+            <input type="text" id="searchtrip_destination" class="form-control">
+            <div id="datetimepicker"></div>
+            <button class="btn btn-default">Cerca</button>
+        </div>
+    </div>
+    {% for field in search_trip_form %}
+        {{ field.as_hidden }}
+    {% endfor %}
+</form>

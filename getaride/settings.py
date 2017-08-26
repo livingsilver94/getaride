@@ -16,7 +16,6 @@ from . import private_settings
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ SECRET_KEY = private_settings.key
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -63,6 +61,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'planner.context_processors.login_form',
             ],
         },
     },
@@ -70,14 +69,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'getaride.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
     'default': private_settings.database,
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -97,7 +94,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -111,7 +107,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
@@ -124,3 +119,9 @@ CITIES_LIGHT_TRANSLATION_LANGUAGES = [LANGUAGE_CODE]
 CITIES_LIGHT_INCLUDE_COUNTRIES = [LANGUAGE_CODE.upper()]
 
 CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPLA', 'PPLA2', 'PPLA3']
+
+LEAFLET_CONFIG = {
+    'SPATIAL_EXTENT': (6.345, 36.0, 20.0, 47.3),
+    'MIN_ZOOM': 6,
+    'MAX_ZOOM': 10,
+}

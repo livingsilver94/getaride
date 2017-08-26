@@ -1,0 +1,23 @@
+{% extends "planner/base_page.html" %}
+{% load leaflet_tags %}
+{% load static %}
+
+{% block head %}
+    {% leaflet_css %}
+    {% leaflet_js %}
+    {% leaflet_map "map" creatediv=False %}
+    <script src="{% static 'planner/js/get_map_var.js' %}"></script>
+    <script src="https://cdn.rawgit.com/moment/moment/develop/min/moment.min.js"></script>
+    <script src="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/5a991bff/build/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet"
+          href="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/5a991bff/build/css/bootstrap-datetimepicker.min.css"
+          type="text/css">
+{% endblock %}
+{% block content %}
+    <main class="container">
+        {% include 'planner/search_trip_form.html' %}
+        <div class="map col-lg-6" id="map" style="height: 500px;">
+            Map
+        </div>
+    </main>
+{% endblock %}

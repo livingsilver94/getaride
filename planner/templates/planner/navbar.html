@@ -1,0 +1,9 @@
+{% load static %}
+<nav class="navbar navbar-default">
+    <!-- <div class="row"> -->
+    <div class="col-lg-2 logo-container">
+        <img class="logo" src="{% static "planner/img/logo.svg" %}"/>
+    </div>
+    <div class="spacer col-lg-5 "></div>
+        {% include 'planner/login_form.html' %}
+</nav>
