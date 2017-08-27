@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'planner.apps.PlannerConfig',
     'cities_light',
     'leaflet',
+    'users',
 ]
 
 MIDDLEWARE = [
