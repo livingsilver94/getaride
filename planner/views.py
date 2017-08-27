@@ -30,7 +30,3 @@ def city_coordinates(request):
         city = City.objects.get(pk=request.GET.get('city_id'))
         coords = {'name': city.name, 'lat': str(city.latitude), 'lon': str(city.longitude)}
     return HttpResponse(json.dumps(coords))
-
-
-def login(request):
-    pass
