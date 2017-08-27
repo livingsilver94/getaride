@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth import models as auth_models
+from users.models import User
 from django.core.validators import MinValueValidator, ValidationError
 from django.utils.translation import ugettext_lazy as _
 
@@ -7,7 +7,7 @@ from cities_light.models import City
 
 
 class PoolingUser(models.Model):
-    base_user = models.OneToOneField(auth_models.User)
+    base_user = models.OneToOneField(User)
     driving_license = models.CharField(max_length=10, unique=True, blank=True, null=True)
 
     def is_driver(self):
