@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.auth',
     'django.contrib.staticfiles',
+    'django.contrib.sessions',
     'planner.apps.PlannerConfig',
     'cities_light',
     'leaflet',
@@ -78,6 +79,10 @@ DATABASES = {
 }
 
 AUTH_USER_MODEL = 'users.User'
+
+LOGIN_REDIRECT_URL = 'planner:homepage'
+
+LOGOUT_REDIRECT_URL = 'planner:homepage'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
