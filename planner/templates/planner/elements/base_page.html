@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    {% include 'planner/elements/base_head.html' %}
+    {% block head %}Additional head info{% endblock %}
+    <title>Title</title>
+</head>
+<body>
+{% include "planner/elements/navbar.html" %}
+{% block content %}Page content{% endblock %}
+<footer>
+    <div class="navbar navbar-default navbar-fixed-bottom">
+        <span class="navbar-text pull-left"> Prof non è che ci sgancia un 28?</span>
+    </div>
+</footer>
+</body>
+</html>

@@ -1,4 +1,4 @@
-{% extends "planner/base_page.html" %}
+{% extends "planner/elements/base_page.html" %}
 {% load leaflet_tags %}
 {% load static %}
 
@@ -15,7 +15,7 @@
 {% endblock %}
 {% block content %}
     <main class="container">
-        {% include 'planner/search_trip_form.html' %}
+        {% include 'planner/elements/search_trip_form.html' %}
         <div class="map col-lg-6" id="map" style="height: 500px;">
             Map
         </div>
