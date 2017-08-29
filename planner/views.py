@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from cities_light.models import City
-from .forms import SearchTrip
+from .forms import SearchTrip, LoginForm
 import json
 
 
@@ -11,6 +11,7 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
         context['search_trip_form'] = SearchTrip(auto_id='searchtrip_%s')
+        context['login_form'] = LoginForm(auto_id='login_%s')
         return context
 
 
