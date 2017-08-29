@@ -1,14 +1,13 @@
 {% url 'planner:login' as login_url %}
-<form id="login_form" {% if request.path != login_url %}class="navbar-form navbar-right"{% endif %} method="post"
-      action="{% url 'planner:login' %}">
+<form method="post" action="{% url 'planner:login' %}">
     {% csrf_token %}
-    <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-        {{ login_form.email }}
+    <div class="input-group input-group-lg">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i> </span>
+        {{ login_form.username }}
     </div>
-    <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+    <div class="input-group input-group-lg">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i> </span>
         {{ login_form.password }}
     </div>
-    <button class="btn btn-default">Login</button>
+    <button class="btn btn-primary btn-block">Login</button>
 </form>

@@ -1,9 +1,32 @@
 {% load static %}
 <nav class="navbar navbar-default">
-    <!-- <div class="row"> -->
-    <div class="col-lg-2 logo-container">
-        <img class="logo" src="{% static "planner/img/logo.svg" %}"/>
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{% url 'planner:homepage' %}">
+                <img src="{% static 'planner/img/logo.svg' %}" id="toplogo"/>
+            </a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            {% if not user.is_authenticated %}
+                <li><a href="#">Register</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-log-in"></span> Login</a>
+                    <div class="dropdown-menu dropdown-form" style="padding: 5px; padding-bottom: 5px;">
+                        {% include 'planner/elements/login_form.html' %}
+                    </div>
+                </li>
+            {% else %}
+                <li class="dropdown">
+                <a class="dropdown-toggle" href="#" role="menu"
+                   data-toggle="dropdown">{{ user.first_name }} {{ user.last_name }}</a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Settings</a></li>
+                    <li><a href="#">Register a trip</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{% url 'planner:logout' %}">Logout</a></li>
+                </ul>
+            {% endif %}
+        </ul>
     </div>
-    <div class="spacer col-lg-5 "></div>
-        {% include 'planner/elements/login_form.html' %}
 </nav>

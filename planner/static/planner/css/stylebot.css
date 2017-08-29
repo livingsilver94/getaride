@@ -1,104 +1,15 @@
-html {
-    box-sizing: border-box;
-}
-
-*, *:before, *:after {
-    box-sizing: inherit;
-
-}
-
-.input-group {
-    /*float: right;*/
-}
-
-.row {
-    height: inherit;
-}
-
-.nav-links {
-    text-align: right;
-    height: 100%;
-}
-
-.nav-links .input-group {
-    display: inline-block;
-    vertical-align: middle;
-    height: 100%;
-    margin-top: 7px;
-}
-
-.nav-links input {
-    vertical-align: middle;
-}
-
-.nav-links button {
-    vertical-align: middle;
-    margin-right: 10px;
-}
-
-.navbar-default {
-    height: 50px;
-    padding: 0px;
-
-}
-
-.logo-container {
-    height: 100%;
-}
-
-.logo {
-    display: inline-block;
-    vertical-align: baseline;
-    height: 100%;
-    padding: 7px 16px;
-    padding-left: 5px;
+#toplogo {
+    height: 85%;
     margin-left: 5px;
+    margin-bottom: 5px;
+    margin-top: 3px;
 }
 
-.button {
-    height: inherit;
+.navbar-brand {
+    padding: 0px;
 }
 
-.searchForm #journeyPlanner {
-    margin: 25px;
-    /*position: absolute;*/
-    /*left: -740px;*/
-    padding: 16px 14px;
-}
-
-.journey-basic {
-    margin: 0;
-    left: 700px;
-    line-height: 20px;
-    display: grid;
-    grid-template-columns: fr 1fr;
-}
-
-.partenza {
-    margin: 10px;
-}
-
-.arrivo {
-    margin: 10px;
-}
-
-.date {
-    margin: 10px;
-}
-
-.ora {
-    margin: 10px;
-}
-
-.dateplace {
-    margin: 10px;
-}
-
-#map {
-    height: 277px;
-}
-
-/* Make City suggestion dropdown appear on top of every other HTML element */
-.ui-autocomplete {
-    z-index: 100 !important;
+.dropdown-form {
+    height: 300%;
+    width: 400%;
 }
