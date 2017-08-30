@@ -2,13 +2,14 @@ from django.db import models
 from users.models import User
 from django.core.validators import MinValueValidator, ValidationError
 from django.utils.translation import ugettext_lazy as _
-
+from .validators import validate_adult
 from cities_light.models import City
 
 
 class PoolingUser(models.Model):
     base_user = models.OneToOneField(User)
     driving_license = models.CharField(max_length=10, unique=True, blank=True, null=True)
+    birth_date = models.DateField(validators=[validate_adult])
 
     def is_driver(self):
         return bool(self.driving_license)
