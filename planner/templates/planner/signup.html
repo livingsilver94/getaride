@@ -5,6 +5,12 @@
     {% include 'planner/elements/base_head.html' %}
 </head>
 <body>
+{% if user_signup.errors %}
+    {{ user_signup.error }}
+{% endif %}
+{% if profile_signup.errors %}
+    {{ profile_signup.errors }}
+{% endif %}
 <form method="post" action="{% url 'planner:signup' %}">
     {% csrf_token %}
     {{ user_signup.as_p }}

@@ -1,9 +1,10 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View
 from cities_light.models import City
 from .forms import SearchTrip, LoginForm, PoolingUserForm
 from users.forms import UserCreationForm
+from getaride import settings
 import json
 
 
@@ -26,12 +27,14 @@ class SignupView(View):
     """
     _user_form_prefix = 'user_signup'
     _profile_form_prefix = 'profile_signup'
+    _form_context = {
+        _user_form_prefix: UserCreationForm(prefix=_user_form_prefix),
+        _profile_form_prefix: PoolingUserForm(prefix=_profile_form_prefix),
+    }
+    template_name = 'planner/signup.html'
 
     def get(self, request):
-        return render(request, template_name='planner/signup.html', context={
-            self._user_form_prefix: UserCreationForm(prefix=self._user_form_prefix),
-            self._profile_form_prefix: PoolingUserForm(prefix=self._profile_form_prefix),
-        })
+        return render(request, self.template_name, context=self._form_context)
 
     def post(self, request):
         user_form = UserCreationForm(request.POST, prefix=self._user_form_prefix)
@@ -41,9 +44,12 @@ class SignupView(View):
             profile = profile_form.save(commit=False)
             profile.base_user_id = user.id
             profile.save()
-            return HttpResponseRedirect(request.META.get('HTTP_REFER', '/'))
+            return redirect(settings.LOGIN_REDIRECT_URL)
         else:
-            self.get(request)
+            return render(request, self.template_name, context={
+                self._user_form_prefix: user_form,
+                self._profile_form_prefix: profile_form
+            })
 
 
 def city_autocomplete(request):
