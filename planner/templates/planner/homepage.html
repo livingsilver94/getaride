@@ -2,6 +2,7 @@
 {% load leaflet_tags %}
 {% load static %}
 
+{% block title %}getaRide{% if user.is_authenticated %} - {{ user.first_name }} {{ user.last_name }}{% endif %}{% endblock %}
 {% block head %}
     {% leaflet_css %}
     {% leaflet_js %}

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+    <title>{% block title %}Page title{% endblock %}</title>
     {% include 'planner/elements/base_head.html' %}
     {% block head %}Additional head info{% endblock %}
-    <title>Title</title>
+
 </head>
 <body>
 {% include "planner/elements/navbar.html" %}
