@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <title>Sign up</title>
+    {% include 'planner/elements/base_head.html' %}
+</head>
+<body>
+<form method="post" action="{% url 'planner:signup' %}">
+    {% csrf_token %}
+    {{ user_signup.as_p }}
+    {{ profile_signup.as_p }}
+    <button>Sign up</button>
+</form>
+</body>
+</html>

@@ -9,4 +9,3 @@ def validate_adult(birth_date):
     age -= (birth_date.day, birth_date.month) < (today.day, today.month)
     if age < 18:
         raise ValidationError(_('You must be at least 18 to sign up'))
-    return birth_date

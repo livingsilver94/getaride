@@ -1,7 +1,9 @@
-from django.http import HttpResponse
-from django.views.generic import TemplateView
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.views.generic import TemplateView, View
 from cities_light.models import City
-from .forms import SearchTrip, LoginForm
+from .forms import SearchTrip, LoginForm, PoolingUserForm
+from users.forms import UserCreationForm
 import json
 
 
@@ -13,6 +15,35 @@ class HomePageView(TemplateView):
         context['search_trip_form'] = SearchTrip(auto_id='searchtrip_%s')
         context['login_form'] = LoginForm(auto_id='login_%s')
         return context
+
+
+class SignupView(View):
+    """
+    This class will create a new user with its associated profile if requested via POST, or it will show a sign up
+    form if GET.
+    This class will use get() or post() depending on the http request.The method that will "decide" what to do
+    is dispatch(), that has not been overridden.
+    """
+    _user_form_prefix = 'user_signup'
+    _profile_form_prefix = 'profile_signup'
+
+    def get(self, request):
+        return render(request, template_name='planner/signup.html', context={
+            self._user_form_prefix: UserCreationForm(prefix=self._user_form_prefix),
+            self._profile_form_prefix: PoolingUserForm(prefix=self._profile_form_prefix),
+        })
+
+    def post(self, request):
+        user_form = UserCreationForm(request.POST, prefix=self._user_form_prefix)
+        profile_form = PoolingUserForm(request.POST, prefix=self._profile_form_prefix)
+        if all((user_form.is_valid(), profile_form.is_valid())):
+            user = user_form.save()
+            profile = profile_form.save(commit=False)
+            profile.base_user_id = user.id
+            profile.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFER', '/'))
+        else:
+            self.get(request)
 
 
 def city_autocomplete(request):

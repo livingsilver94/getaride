@@ -1,15 +1,18 @@
 from django.db import models
-from users.models import User
+from getaride import settings
 from django.core.validators import MinValueValidator, ValidationError
 from django.utils.translation import ugettext_lazy as _
 from .validators import validate_adult
 from cities_light.models import City
+from users.models import User
+from datetime import date, timedelta
 
 
 class PoolingUser(models.Model):
-    base_user = models.OneToOneField(User)
+    base_user = models.OneToOneField(settings.AUTH_USER_MODEL)
     driving_license = models.CharField(max_length=10, unique=True, blank=True, null=True)
-    birth_date = models.DateField(validators=[validate_adult])
+    birth_date = models.DateField(blank=False, validators=[validate_adult],
+                                  default=date.today() - timedelta(365.25 * 18) - timedelta(days=1))
 
     def is_driver(self):
         return bool(self.driving_license)
@@ -24,6 +27,7 @@ class Trip(models.Model):
 
     # Limit passenger number to 8
     def clean(self, *args, **kwargs):
+        # TODO: probably it must be greater or EQUAL to 8. Needs testing
         if self.passengers.count() > 8:
             raise ValidationError(_("You are not allowed to drive with more than 8 passengers"))
         super(Trip, self).clean(*args, **kwargs)
