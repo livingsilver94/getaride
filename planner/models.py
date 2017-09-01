@@ -22,6 +22,7 @@ class Trip(models.Model):
     origin = models.ForeignKey(City, related_name='trip_origin')
     destination = models.ForeignKey(City, related_name='trip_destination')
     date_origin = models.DateTimeField(name='date_origin')
+    estimated_date_arrival = models,DateTimeField(name='est_date_arrival')
     passengers = models.ManyToManyField(PoolingUser)
     price = models.DecimalField(decimal_places=2, max_digits=5, validators=[MinValueValidator(0)])
 
