@@ -9,7 +9,7 @@ from datetime import date, timedelta
 
 
 class PoolingUser(models.Model):
-    base_user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    base_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     driving_license = models.CharField(max_length=10, unique=True, blank=True, null=True)
     birth_date = models.DateField(blank=False, validators=[validate_adult],
                                   default=date.today() - timedelta(365.25 * 18) - timedelta(days=1))
@@ -22,7 +22,7 @@ class Trip(models.Model):
     origin = models.ForeignKey(City, related_name='trip_origin')
     destination = models.ForeignKey(City, related_name='trip_destination')
     date_origin = models.DateTimeField(name='date_origin')
-    estimated_date_arrival = models,DateTimeField(name='est_date_arrival')
+    estimated_date_arrival = models.DateTimeField(name='est_date_arrival')
     passengers = models.ManyToManyField(PoolingUser)
     price = models.DecimalField(decimal_places=2, max_digits=5, validators=[MinValueValidator(0)])
 
