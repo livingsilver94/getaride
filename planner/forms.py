@@ -13,6 +13,10 @@ class LoginForm(AuthenticationForm):
 
 
 class SearchTrip(forms.Form):
+    """
+    Pay attentions that id fields are meant to be hidden, since we suppose they come from
+    an autocomplete AJAX request via an another CharField.
+    """
     origin_id = forms.IntegerField()
     destination_id = forms.IntegerField()
     datetime = forms.DateTimeField()
