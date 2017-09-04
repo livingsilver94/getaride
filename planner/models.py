@@ -23,8 +23,17 @@ class Trip(models.Model):
     destination = models.ForeignKey(City, related_name='trip_destination')
     date_origin = models.DateTimeField(name='date_origin')
     estimated_date_arrival = models.DateTimeField(name='est_date_arrival')
+    total_price = models.DecimalField(decimal_places=2, max_digits=5, validators=[MinValueValidator(0)])
+
+
+class Step(models.Model):
+    origin = models.ForeignKey(City, related_name='city_origin')
+    destination = models.ForeignKey(City, related_name='city_destination')
+    hour_origin = models.TimeField()
+    hour_destination = models.TimeField()
     passengers = models.ManyToManyField(PoolingUser)
     price = models.DecimalField(decimal_places=2, max_digits=5, validators=[MinValueValidator(0)])
+    trip = models.ForeignKey(Trip, related_name='trip')
 
     # Limit passenger number to 8
     def clean(self, *args, **kwargs):
