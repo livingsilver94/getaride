@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
 from .models import PoolingUser
+from users.forms import UserCreationForm
 
 
 class LoginForm(AuthenticationForm):
@@ -27,3 +28,13 @@ class PoolingUserForm(forms.ModelForm):
         model = PoolingUser
         # Exclude the one-to-one relation with User
         fields = ['birth_date', 'driving_license']
+
+
+class UserForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        fields = ('email', 'first_name', 'last_name')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.Meta.fields:
+            self[field_name].field.required = True

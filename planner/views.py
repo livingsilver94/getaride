@@ -2,8 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View
 from cities_light.models import City
-from .forms import SearchTrip, LoginForm, PoolingUserForm
-from users.forms import UserCreationForm
+from .forms import SearchTrip, LoginForm, PoolingUserForm, UserForm
 from getaride import settings
 import json
 
@@ -28,7 +27,7 @@ class SignupView(View):
     _user_form_prefix = 'user_signup'
     _profile_form_prefix = 'profile_signup'
     _form_context = {
-        _user_form_prefix: UserCreationForm(prefix=_user_form_prefix),
+        _user_form_prefix: UserForm(prefix=_user_form_prefix),
         _profile_form_prefix: PoolingUserForm(prefix=_profile_form_prefix),
     }
     template_name = 'planner/signup.html'
@@ -37,7 +36,7 @@ class SignupView(View):
         return render(request, self.template_name, context=self._form_context)
 
     def post(self, request):
-        user_form = UserCreationForm(request.POST, prefix=self._user_form_prefix)
+        user_form = UserForm(request.POST, prefix=self._user_form_prefix)
         profile_form = PoolingUserForm(request.POST, prefix=self._profile_form_prefix)
         if all((user_form.is_valid(), profile_form.is_valid())):
             user = user_form.save()
