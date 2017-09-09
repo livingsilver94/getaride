@@ -34,6 +34,7 @@ class Step(models.Model):
     passengers = models.ManyToManyField(PoolingUser)
     price = models.DecimalField(decimal_places=2, max_digits=5, validators=[MinValueValidator(0)])
     trip = models.ForeignKey(Trip, related_name='trip')
+    count = models.PositiveIntegerField(name='count')
 
     # Limit passenger number to 8
     def clean(self, *args, **kwargs):
