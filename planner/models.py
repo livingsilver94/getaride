@@ -40,4 +40,8 @@ class Step(models.Model):
         # TODO: probably it must be greater or EQUAL to 8. Needs testing
         if self.passengers.count() > 8:
             raise ValidationError(_("You are not allowed to drive with more than 8 passengers"))
+
+        if self.estimated_date_arrival <= self.date_origin:
+            raise ValidationError(_("Estimated date arrival must be later then date origin"))
+
         super(Trip, self).clean(*args, **kwargs)
