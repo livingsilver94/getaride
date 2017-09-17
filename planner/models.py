@@ -1,6 +1,6 @@
 from django.db import models
 from getaride import settings
-from django.core.validators import MinValueValidator, ValidationError
+from django.core.validators import MinValueValidator, ValidationError,MaxValueValidator
 from django.utils.translation import ugettext_lazy as _
 from .validators import validate_adult
 from cities_light.models import City
@@ -23,7 +23,8 @@ class Trip(models.Model):
     destination = models.ForeignKey(City, related_name='trip_destination')
     date_origin = models.DateTimeField(name='date_origin')
     estimated_date_arrival = models.DateTimeField(name='est_date_arrival')
-    total_price = models.DecimalField(decimal_places=2, max_digits=5, validators=[MinValueValidator(1)])
+    max_num_passengers = models.PositiveIntegerField(validators=[MaxValueValidator(8)])
+
 
 
 class Step(models.Model):
@@ -39,8 +40,8 @@ class Step(models.Model):
     # Limit passenger number to 8
     def clean(self, *args, **kwargs):
         # TODO: probably it must be greater or EQUAL to 8. Needs testing
-        if self.passengers.count() > 8:
-            raise ValidationError(_("You are not allowed to drive with more than 8 passengers"))
+        if self.passengers.count() > self.max_num_passengers:
+            raise ValidationError(_("The maximum number of passengers for this trip as already been reached"))
 
         if self.estimated_date_arrival <= self.date_origin:
             raise ValidationError(_("Estimated arrival date must be later than departure date"))
