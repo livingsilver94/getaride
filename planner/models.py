@@ -1,6 +1,6 @@
 from django.db import models
 from getaride import settings
-from django.core.validators import MinValueValidator, ValidationError,MaxValueValidator, MinLengthValidator
+from django.core.validators import MinValueValidator, ValidationError, MaxValueValidator, MinLengthValidator
 from django.utils.translation import ugettext_lazy as _
 from .validators import validate_adult
 from cities_light.models import City
@@ -10,9 +10,10 @@ from datetime import date, timedelta
 
 class PoolingUser(models.Model):
     base_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    driving_license = models.CharField(max_length=10, unique=True, blank=True, null=True, validators=[MinLengthValidator(10)])
+    driving_license = models.CharField(max_length=10, unique=True, blank=True, null=True,
+                                       validators=[MinLengthValidator(10)])
     birth_date = models.DateField(blank=False, validators=[validate_adult],
-                                  default=date.today() - timedelta(365.25 * 18) - timedelta(days=1))
+                                  default=date.today() - timedelta(days=365.25 * 18 + 1))
 
     def is_driver(self):
         return bool(self.driving_license)
@@ -27,7 +28,6 @@ class Trip(models.Model):
     is_joinable = models.BooleanField(default=True)
 
 
-
 class Step(models.Model):
     origin = models.ForeignKey(City, related_name='city_origin')
     destination = models.ForeignKey(City, related_name='city_destination')
@@ -36,7 +36,7 @@ class Step(models.Model):
     passengers = models.ManyToManyField(PoolingUser)
     max_price = models.DecimalField(decimal_places=2, max_digits=5, validators=[MinValueValidator(0.01)])
     trip = models.ForeignKey(Trip, related_name='trip')
-    count = models.PositiveIntegerField(name='count', validators=[MinValueValidator(0)])
+    count = models.PositiveIntegerField()
 
     # Limit passenger number to 8
     def clean(self, *args, **kwargs):
