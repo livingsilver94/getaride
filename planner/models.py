@@ -1,6 +1,6 @@
 from django.db import models
 from getaride import settings
-from django.core.validators import MinValueValidator, ValidationError,MaxValueValidator
+from django.core.validators import MinValueValidator, ValidationError,MaxValueValidator, MinLengthValidator
 from django.utils.translation import ugettext_lazy as _
 from .validators import validate_adult
 from cities_light.models import City
@@ -10,7 +10,7 @@ from datetime import date, timedelta
 
 class PoolingUser(models.Model):
     base_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    driving_license = models.CharField(max_length=10, min_length=10, unique=True, blank=True, null=True)
+    driving_license = models.CharField(max_length=10, unique=True, blank=True, null=True, validators=[MinLengthValidator(10)])
     birth_date = models.DateField(blank=False, validators=[validate_adult],
                                   default=date.today() - timedelta(365.25 * 18) - timedelta(days=1))
 
