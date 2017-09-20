@@ -23,7 +23,8 @@ class Trip(models.Model):
     destination = models.ForeignKey(City, related_name='trip_destination')
     date_origin = models.DateTimeField(name='date_origin')
     estimated_date_arrival = models.DateTimeField(name='est_date_arrival')
-    max_num_passengers = models.PositiveIntegerField(validators=[MaxValueValidator(8)])
+    max_num_passengers = models.PositiveIntegerField(validators=[MaxValueValidator(8), MinValueValidator(1)])
+    is_joinable = models.BooleanField(default=True)
 
 
 
@@ -33,13 +34,13 @@ class Step(models.Model):
     hour_origin = models.TimeField()
     hour_destination = models.TimeField()
     passengers = models.ManyToManyField(PoolingUser)
-    price = models.DecimalField(decimal_places=2, max_digits=5, validators=[MinValueValidator(0.01)])
+    max_price = models.DecimalField(decimal_places=2, max_digits=5, validators=[MinValueValidator(0.01)])
     trip = models.ForeignKey(Trip, related_name='trip')
     count = models.PositiveIntegerField(name='count', validators=[MinValueValidator(0)])
 
     # Limit passenger number to 8
     def clean(self, *args, **kwargs):
-        # TODO: probably it must be greater or EQUAL to 8. Needs testing
+
         if self.passengers.count() > self.max_num_passengers:
             raise ValidationError(_("The maximum number of passengers for this trip as already been reached"))
 
