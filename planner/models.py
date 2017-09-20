@@ -40,14 +40,8 @@ class Step(models.Model):
 
     # Limit passenger number to 8
     def clean(self, *args, **kwargs):
-
         if self.passengers.count() > self.max_num_passengers:
             raise ValidationError(_("The maximum number of passengers for this trip as already been reached"))
-
-        if self.estimated_date_arrival <= self.date_origin:
-            raise ValidationError(_("Estimated arrival date must be later than departure date"))
-
         if self.hour_destination <= self.hour_origin:
             raise ValidationError(_("Estimated arrival hour must be later than departure hour"))
-
         super(Trip, self).clean(*args, **kwargs)
