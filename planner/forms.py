@@ -16,7 +16,7 @@ class LoginForm(AuthenticationForm):
 
 class SearchTrip(forms.Form):
     """
-    Pay attentions that id fields are meant to be hidden, since we suppose they come from
+    Pay attention that id fields are meant to be hidden, since we suppose they come from
     an autocomplete AJAX request via an another CharField.
     """
     origin_id = forms.IntegerField()
@@ -28,7 +28,7 @@ class PoolingUserForm(forms.ModelForm):
     class Meta:
         model = PoolingUser
         # Exclude the one-to-one relation with User
-        fields = ['birth_date', 'driving_license']
+        fields = ['birth_date', 'driving_license', 'cellphone_number']
 
 
 class UserForm(UserCreationForm):
@@ -39,4 +39,4 @@ class UserForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         for field_name in self.Meta.fields:
             self[field_name].field.required = True
-        self['password1'].field.validators=[MinLengthValidator(6)]
+        self['password1'].field.validators = [MinLengthValidator(6)]
