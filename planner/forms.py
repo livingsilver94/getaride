@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
+from django.core.validators import MinLengthValidator
 from .models import PoolingUser
 from users.forms import UserCreationForm
 
@@ -38,3 +39,4 @@ class UserForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         for field_name in self.Meta.fields:
             self[field_name].field.required = True
+        self['password1'].field.validators=[MinLengthValidator(6)]
