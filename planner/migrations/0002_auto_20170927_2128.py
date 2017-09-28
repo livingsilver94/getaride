@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='poolinguser',
             name='cellphone_number',
-            field=models.CharField(blank=True, max_length=10, null=True, unique=True, validators=[django.core.validators.RegexValidator(message='Please insert a valid cellphone number', regex='(\\+\\d{2}){0,1}3{1}\\d{9}')]),
+            field=models.CharField(blank=True, max_length=13, null=True, unique=True, validators=[django.core.validators.RegexValidator(message='Please insert a valid cellphone number', regex='(\\+\\d{2}){0,1}3{1}\\d{9}')]),
         ),
         migrations.AddField(
             model_name='trip',
