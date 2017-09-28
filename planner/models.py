@@ -48,4 +48,6 @@ class Step(models.Model):
             raise ValidationError(_("The maximum number of passengers for this trip as already been reached"))
         if self.hour_destination <= self.hour_origin:
             raise ValidationError(_("Estimated arrival hour must be later than departure hour"))
+        if self.destination == self.origin:
+            raise ValidationError(_("Your destination must be different from origin"))
         super(Trip, self).clean(*args, **kwargs)
