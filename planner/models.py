@@ -14,11 +14,11 @@ class PoolingUser(models.Model):
     driving_license = models.CharField(max_length=10, unique=True, blank=True, null=True,
                                        validators=[MinLengthValidator(10)])
     birth_date = models.DateField(blank=False, validators=[validate_adult],
-                                  default=date.today() - timedelta(days=365.25 * 18 + 1))
+                                  default=date.today() - timedelta(365.25 * 18) - timedelta(days=1))
     cellphone_number = models.CharField(max_length=13, unique=True,
                                         validators=[RegexValidator(regex='^(\+\d{2}){0,1}3{1}\d{9}$',
-                                                                   message=_('Please insert a valid cellphone number'))
-                                                    ])
+                                                                   message=_(
+                                                                       'Please insert a valid cellphone number'))])
 
     def is_driver(self):
         return bool(self.driving_license)
