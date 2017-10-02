@@ -18,7 +18,8 @@ class PoolingUser(models.Model):
     cellphone_number = models.CharField(max_length=13, unique=True,
                                         validators=[RegexValidator(regex='^(\+\d{2}){0,1}3{1}\d{9}$',
                                                                    message=_(
-                                                                       'Please insert a valid cellphone number'))])
+                                                                       'Please insert a valid cellphone number'))],
+                                        default='0000000000')
 
     def is_driver(self):
         return bool(self.driving_license)
