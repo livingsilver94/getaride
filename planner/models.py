@@ -26,8 +26,6 @@ class PoolingUser(models.Model):
 
 class Trip(models.Model):
     driver = models.ForeignKey(PoolingUser, related_name='driver')
-    origin = models.ForeignKey(City, related_name='trip_origin')
-    destination = models.ForeignKey(City, related_name='trip_destination')
     date_origin = models.DateTimeField(name='date_origin')
     max_num_passengers = models.PositiveIntegerField(validators=[MaxValueValidator(8), MinValueValidator(1)], default=4)
     is_joinable = models.BooleanField(default=True)
