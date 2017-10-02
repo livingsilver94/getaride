@@ -25,6 +25,7 @@ class PoolingUser(models.Model):
 
 
 class Trip(models.Model):
+    driver = models.OneToOneField(PoolingUser, related_name='driver')
     origin = models.ForeignKey(City, related_name='trip_origin')
     destination = models.ForeignKey(City, related_name='trip_destination')
     date_origin = models.DateTimeField(name='date_origin')
