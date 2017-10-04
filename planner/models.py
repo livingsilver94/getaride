@@ -37,7 +37,7 @@ class Step(models.Model):
     passengers = models.ManyToManyField(PoolingUser)
     max_price = models.DecimalField(decimal_places=2, max_digits=5, validators=[MinValueValidator(0.01)])
     trip = models.ForeignKey(Trip, related_name='trip')
-    order = models.PositiveIntegerField()
+    order = models.PositiveIntegerField(default=0)
 
     # Passenger checks are in 'signals' submodule
     def clean(self):
