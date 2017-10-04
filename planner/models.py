@@ -41,7 +41,10 @@ class Step(models.Model):
 
     # Passenger checks are in 'signals' submodule
     def clean(self):
+        except_dict = dict()
         if self.hour_destination <= self.hour_origin:
-            raise ValidationError(_("Estimated arrival hour must be later than departure hour"))
+            except_dict.update({'hour_destination': _("Estimated arrival hour must be later than departure hour")})
         if self.destination == self.origin:
-            raise ValidationError(_("Your destination must be different from origin"))
+            except_dict.update({'destination': _("Your destination must be different from origin")})
+        if except_dict:
+            raise ValidationError(except_dict)
