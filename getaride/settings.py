@@ -73,9 +73,19 @@ WSGI_APPLICATION = 'getaride.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = {
-    'default': private_settings.database,
-}
+import sys
+
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'testdb',
+        },
+    }
+else:
+    DATABASES = {
+        'default': private_settings.database,
+    }
 
 AUTH_USER_MODEL = 'users.User'
 
