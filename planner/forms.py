@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
 from django.core.validators import MinLengthValidator
-from .models import PoolingUser
+from .models import PoolingUser, Trip, Step
 from users.forms import UserCreationForm
 
 
@@ -29,6 +29,18 @@ class PoolingUserForm(forms.ModelForm):
         model = PoolingUser
         # Exclude the one-to-one relation with User
         fields = ['birth_date', 'driving_license', 'cellphone_number']
+
+
+class TripForm(forms.ModelForm):
+    class Meta:
+        model = Trip
+        fields = ['date_origin', 'max_num_passengers']
+
+
+class StepForm(forms.ModelForm):
+    class Meta:
+        model = Step
+        fields = ['origin', 'destination', 'hour_origin', 'hour_destination', 'max_price']
 
 
 class UserForm(UserCreationForm):
