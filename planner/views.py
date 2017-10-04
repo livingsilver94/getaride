@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView, View, CreateView
+from django.contrib.auth.decorators import login_required
 from cities_light.models import City
 from .forms import SearchTrip, LoginForm, PoolingUserForm, UserForm
 from getaride import settings
@@ -49,6 +50,11 @@ class SignupView(View):
                 self._user_form_prefix: user_form,
                 self._profile_form_prefix: profile_form
             })
+
+
+@login_required
+class NewTripView(CreateView):
+    pass
 
 
 def city_autocomplete(request):
