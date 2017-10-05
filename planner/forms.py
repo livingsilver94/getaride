@@ -43,6 +43,9 @@ class StepForm(forms.ModelForm):
         fields = ['origin', 'destination', 'hour_origin', 'hour_destination', 'max_price']
 
 
+StepFormSet = inlineformset_factory(parent_model=Trip, model=Step, form=StepForm, can_delete=False)
+
+
 class UserForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         fields = ('email', 'first_name', 'last_name')
