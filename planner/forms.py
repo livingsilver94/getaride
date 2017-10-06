@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import AuthenticationForm
+from django.forms.models import inlineformset_factory
 from django import forms
 from django.core.validators import MinLengthValidator
 from .models import PoolingUser, Trip, Step
