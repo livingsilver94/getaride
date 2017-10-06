@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, CreateView
-from django.contrib.auth.decorators import login_required
 from cities_light.models import City
-from .forms import SearchTrip, LoginForm, PoolingUserForm, UserForm
+from .forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet
+from .models import Trip
 from getaride import settings
 import json
 
@@ -52,9 +52,25 @@ class SignupView(View):
             })
 
 
-@login_required
 class NewTripView(CreateView):
-    pass
+    template_name = 'planner/newtrip_page.html'
+    model = Trip
+    form_class = TripForm
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        step_formset = StepFormSet()
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  formset=step_formset,
+                                  )
+        )
 
 
 def city_autocomplete(request):

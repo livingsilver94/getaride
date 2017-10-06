@@ -1,0 +1,12 @@
+{% extends "planner/elements/base_page.html" %}
+
+{% block content %}
+    <p>
+    <form action="" method="post">
+        {{ form.as_p }}
+        {% for form in formset %}
+            {{ form.as_p }}
+        {% endfor %}
+    {{ formset.form_management }}
+    </form>
+{% endblock %}
