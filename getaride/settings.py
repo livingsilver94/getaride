@@ -89,6 +89,8 @@ else:
 
 AUTH_USER_MODEL = 'users.User'
 
+LOGIN_URL = 'planner:login'
+
 LOGIN_REDIRECT_URL = 'planner:homepage'
 
 LOGOUT_REDIRECT_URL = 'planner:homepage'
