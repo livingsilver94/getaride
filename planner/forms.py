@@ -15,13 +15,24 @@ class LoginForm(AuthenticationForm):
                                                                  }))
 
 
+class CityInput(forms.NumberInput):
+    template_name = 'planner/widgets/city.html'
+
+    class Media:
+        js = ('planner/js/widgets/city_autocomplete.js',)
+
+
+class CityField(forms.IntegerField):
+    widget = CityInput
+
+
 class SearchTrip(forms.Form):
     """
     Pay attention that id fields are meant to be hidden, since we suppose they come from
     an autocomplete AJAX request via an another CharField.
     """
-    origin_id = forms.IntegerField()
-    destination_id = forms.IntegerField()
+    origin = CityField()
+    destination = CityField()
     datetime = forms.DateTimeField()
 
 
