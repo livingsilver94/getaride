@@ -1,4 +1,8 @@
-// show_place_on_map(event.target.id, ui.item.id);
+$(function () {
+    $(".city-autocomplete").on("autocompleteselect", function (event, ui) {
+        show_place_on_map(event.target.id, ui.item.id);
+    });
+})
 
 // Datepicker init
 $(function () {
@@ -43,7 +47,7 @@ function show_place_on_map(input_id, city_id) {
                     marker_state = 0;
                     markers.length = 0;
                 }
-                if (input_id === "searchtrip_origin") {
+                if (input_id === "searchtrip_origin_auto") {
                     render_marker(0, marker);
                 }
                 else {
