@@ -53,6 +53,10 @@ class StepForm(forms.ModelForm):
     class Meta:
         model = Step
         fields = ['origin', 'destination', 'hour_origin', 'hour_destination', 'max_price']
+        widgets = {
+            'origin': CityInput(),
+            'destination': CityInput(),
+        }
 
 
 StepFormSet = inlineformset_factory(parent_model=Trip, model=Step, form=StepForm, can_delete=False, min_num=1, extra=0)
