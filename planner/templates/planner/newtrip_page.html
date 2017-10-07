@@ -5,7 +5,7 @@
     {{ formset.media }}
     <form action="" method="post">
         {{ form.as_p }}
-        {{ formset.form_management }}
+        {{ formset.management_form }}
         {% for form_loop in formset %}
             <div class="inline {{ formset.prefix }}">
                 {{ form_loop.as_p }}
@@ -21,7 +21,7 @@
                 deleteCssClass: "btn btn-block btn-primary bordered", // CSS class applied to the delete link
                 addText: 'Add another question', // Text for the add link
                 deleteText: 'Remove question above', // Text for the delete link
-                formCssClass: 'inline-form' // CSS class applied to each form in a formset
+                formCssClass: 'inline-form', // CSS class applied to each form in a formset
             })
         });
     </script>
