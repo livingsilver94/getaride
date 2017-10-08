@@ -8,6 +8,12 @@ $(function () {
         formCssClass: 'inline-form', // CSS class applied to each form in a formset
         added: function (row) {
             add_autocomplete(row);
+            row.find("input").first().prop('disabled', true);
+        },
+        removed: function (row) {
+            if ($('#id_' + formset_prefix + '-TOTAL_FORMS').val() == 1) {
+                $(".inline." + formset_prefix).find("input").prop("disabled", false);
+            }
         }
     })
 });
