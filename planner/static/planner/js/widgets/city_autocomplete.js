@@ -9,6 +9,10 @@ var autocomplete_options = {
     },
 };
 
+function add_autocomplete(obj) {
+    obj.find("input.city-autocomplete").autocomplete(autocomplete_options);
+}
+
 $(document).ready(function () {
-    $(".city-autocomplete").autocomplete(autocomplete_options);
+    $("input.city-autocomplete").autocomplete(autocomplete_options);
 });
