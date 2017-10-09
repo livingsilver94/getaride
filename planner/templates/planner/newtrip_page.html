@@ -6,14 +6,18 @@
     {{ formset.media }}
 {% endblock %}
 {% block content %}
-    <form action="" method="post">
+    <form action="{% url 'planner:new-trip' %}" method="post">
+        {% csrf_token %}
+        {{ form.errors }}
         {{ form.as_p }}
         {{ formset.management_form }}
         {% for form_loop in formset %}
             <div class="inline {{ formset.prefix }}">
+                {{ form_loop.errors }}
                 {{ form_loop.as_p }}
             </div>
         {% endfor %}
+        <button type="submit">Submit</button>
     </form>
     <script>var formset_prefix = "{{ formset.prefix }}"</script>
 {% endblock %}
