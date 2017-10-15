@@ -56,10 +56,13 @@ class StepForm(forms.ModelForm):
         widgets = {
             'origin': CityInput(),
             'destination': CityInput(),
+            'hour_origin': forms.TimeInput(format='%H:%M'),
+            'hour_destination': forms.TimeInput(format='%H:%M'),
         }
 
 
-StepFormSet = inlineformset_factory(parent_model=Trip, model=Step, form=StepForm, can_delete=False, min_num=1, extra=0)
+StepFormSet = inlineformset_factory(parent_model=Trip, model=Step, form=StepForm, can_delete=False, min_num=1, extra=0,
+                                    validate_min=1)
 
 
 class UserForm(UserCreationForm):
