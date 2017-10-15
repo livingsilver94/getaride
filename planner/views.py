@@ -1,8 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView, View, CreateView
 from cities_light.models import City
-from .forms import SearchTrip, LoginForm, PoolingUserForm, UserForm
+from .forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet
+from .models import Trip
 from getaride import settings
 import json
 
@@ -49,6 +51,71 @@ class SignupView(View):
                 self._user_form_prefix: user_form,
                 self._profile_form_prefix: profile_form
             })
+
+
+# CREDITS: http://www.mustafa-s.com/blog/django_cbv_inlineformset_and_bootstrap3/
+class NewTripView(CreateView):
+    template_name = 'planner/newtrip_page.html'
+    model = Trip
+    form_class = TripForm
+    object = None
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        if request.user.poolinguser.is_driver():
+            self.object = None
+            form = self.get_form(self.get_form_class())
+            step_formset = StepFormSet()
+            return self.render_to_response(
+                self.get_context_data(form=form,
+                                      formset=step_formset,
+                                      )
+            )
+        raise PermissionDenied
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form(self.get_form_class())
+        formset = StepFormSet(self.request.POST)
+        if formset.is_valid() and form.is_valid():
+            return self.form_valid(form.cleaned_data, formset.cleaned_data)
+        else:
+            return self.form_invalid(form, formset)
+
+    def form_valid(self, form, formset):
+        """
+        Called if all forms are valid. Creates Trip instance along with the
+        associated Step instances then redirects to success url
+        Args:
+            form: Trip form
+            formset: Step formset
+
+        Returns: an HttpResponse to success url
+        """
+        self.object = form.save(commit=False)
+        self.object.driver = self.request.user.poolinguser
+        self.object.save()
+
+        steps = formset.save(commit=False)
+        for index, step in enumerate(steps):
+            step.trip = self.object
+            step.order = index
+            step.save()
+        return redirect(settings.LOGIN_REDIRECT_URL)
+
+    def form_invalid(self, form, formset):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+
+        Args:
+            form: Trip form
+            formset: Step formset
+        """
+        return self.render_to_response(
+            self.get_context_data(form=form, formset=formset))
 
 
 def city_autocomplete(request):

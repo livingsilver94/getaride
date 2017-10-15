@@ -22,7 +22,9 @@
                    data-toggle="dropdown">{{ user.first_name }} {{ user.last_name }}</a>
                 <ul class="dropdown-menu" role="menu">
                     <li><a href="#">Settings</a></li>
-                    <li><a href="#">Register a trip</a></li>
+                    {% if user.poolinguser.is_driver %}
+                        <li><a href="{% url 'planner:new-trip' %}">Register a trip</a></li>
+                    {% endif %}
                     <li class="divider"></li>
                     <li><a href="{% url 'planner:logout' %}">Logout</a></li>
                 </ul>

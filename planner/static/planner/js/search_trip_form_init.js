@@ -1,16 +1,8 @@
-// City inputs init
 $(function () {
-    $("#searchtrip_origin, #searchtrip_destination").autocomplete({
-        source: autocomplete_url,
-        dataType: 'json',
-        minLength: 1,
-        select: function (event, ui) {
-            // DOM objects terminating with "_id" are hidden fields storing database tuple IDs
-            document.getElementById(event.target.id + '_id').value = ui.item.id;
-            show_place_on_map(event.target.id, ui.item.id);
-        },
+    $(".city-autocomplete").on("autocompleteselect", function (event, ui) {
+        show_place_on_map(event.target.id, ui.item.id);
     });
-});
+})
 
 // Datepicker init
 $(function () {
@@ -55,7 +47,7 @@ function show_place_on_map(input_id, city_id) {
                     marker_state = 0;
                     markers.length = 0;
                 }
-                if (input_id === "searchtrip_origin") {
+                if (input_id === "searchtrip_origin_auto") {
                     render_marker(0, marker);
                 }
                 else {

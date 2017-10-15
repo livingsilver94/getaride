@@ -1,0 +1,23 @@
+{% extends "planner/elements/base_page.html" %}
+{% load static %}
+{% block head %}
+    <script src="{% static "planner/js/jquery.formset.js" %}"></script>
+    <script src="{% static 'planner/js/new_step_form.js' %}"></script>
+    {{ formset.media }}
+{% endblock %}
+{% block content %}
+    <form action="{% url 'planner:new-trip' %}" method="post">
+        {% csrf_token %}
+        {{ form.errors }}
+        {{ form.as_p }}
+        {{ formset.management_form }}
+        {% for form_loop in formset %}
+            <div class="inline {{ formset.prefix }}">
+                {{ form_loop.errors }}
+                {{ form_loop.as_p }}
+            </div>
+        {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+    <script>var formset_prefix = "{{ formset.prefix }}"</script>
+{% endblock %}

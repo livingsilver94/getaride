@@ -3,11 +3,19 @@
     {% csrf_token %}
     <div class="input-group input-group-lg">
         <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i> </span>
-        {{ login_form.username }}
+        {% if login_form.username %}
+            {{ login_form.username }}
+        {% else %}
+            {{ form.username }}
+        {% endif %}
     </div>
     <div class="input-group input-group-lg">
         <span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i> </span>
-        {{ login_form.password }}
+        {% if login_form.password %}
+            {{ login_form.password }}
+        {% else %}
+            {{ form.password }}
+        {% endif %}
     </div>
     <button class="btn btn-primary btn-block">Login</button>
 </form>

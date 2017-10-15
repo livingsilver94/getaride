@@ -1,7 +1,8 @@
 from django.contrib.auth.forms import AuthenticationForm
+from django.forms.models import inlineformset_factory
 from django import forms
 from django.core.validators import MinLengthValidator
-from .models import PoolingUser
+from .models import PoolingUser, Trip, Step
 from users.forms import UserCreationForm
 
 
@@ -14,13 +15,24 @@ class LoginForm(AuthenticationForm):
                                                                  }))
 
 
+class CityInput(forms.NumberInput):
+    template_name = 'planner/widgets/city.html'
+
+    class Media:
+        js = ('planner/js/widgets/city_autocomplete.js',)
+
+
+class CityField(forms.IntegerField):
+    widget = CityInput
+
+
 class SearchTrip(forms.Form):
     """
     Pay attention that id fields are meant to be hidden, since we suppose they come from
     an autocomplete AJAX request via an another CharField.
     """
-    origin_id = forms.IntegerField()
-    destination_id = forms.IntegerField()
+    origin = CityField()
+    destination = CityField()
     datetime = forms.DateTimeField()
 
 
@@ -29,6 +41,28 @@ class PoolingUserForm(forms.ModelForm):
         model = PoolingUser
         # Exclude the one-to-one relation with User
         fields = ['birth_date', 'driving_license', 'cellphone_number']
+
+
+class TripForm(forms.ModelForm):
+    class Meta:
+        model = Trip
+        fields = ['date_origin', 'max_num_passengers']
+
+
+class StepForm(forms.ModelForm):
+    class Meta:
+        model = Step
+        fields = ['origin', 'destination', 'hour_origin', 'hour_destination', 'max_price']
+        widgets = {
+            'origin': CityInput(),
+            'destination': CityInput(),
+            'hour_origin': forms.TimeInput(format='%H:%M'),
+            'hour_destination': forms.TimeInput(format='%H:%M'),
+        }
+
+
+StepFormSet = inlineformset_factory(parent_model=Trip, model=Step, form=StepForm, can_delete=False, min_num=1, extra=0,
+                                    validate_min=1)
 
 
 class UserForm(UserCreationForm):

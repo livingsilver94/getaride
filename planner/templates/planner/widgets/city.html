@@ -1,0 +1,3 @@
+<input type="text" class="city-autocomplete" id="{{ widget.attrs.id|add:'_auto'}}"/>
+<input type="{{ widget.type }}" name="{{ widget.name }}"
+       hidden="hidden" {% include "django/forms/widgets/attrs.html" %} />
