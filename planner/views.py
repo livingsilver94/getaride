@@ -80,7 +80,7 @@ class NewTripView(CreateView):
         form = self.get_form(self.get_form_class())
         formset = StepFormSet(self.request.POST)
         if formset.is_valid() and form.is_valid():
-            return self.form_valid(form.cleaned_data, formset.cleaned_data)
+            return self.form_valid(form, formset)
         else:
             return self.form_invalid(form, formset)
 
