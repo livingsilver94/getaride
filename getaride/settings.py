@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sessions',
     'planner.apps.PlannerConfig',
+    'bootstrap3',
     'cities_light',
     'leaflet',
     'users',

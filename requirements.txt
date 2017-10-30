@@ -3,3 +3,4 @@ django-cities-light
 django-leaflet
 mysqlclient
 django-email-users
+django-bootstrap3
