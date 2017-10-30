@@ -7,12 +7,12 @@
 <form id="journey_form" class="journey-form col-lg-6">
     <h2> Organizza il tuo viaggio </h2>
     <div id="journey_basic" class="journey-basic">
-        <div class="input-group">
+           <div class="input-group">
             {{ search_trip_form.origin }}
-            {{ search_trip_form.destination }}
-            <div id="datetimepicker"></div>
-            <button class="btn btn-default">Cerca</button>
-        </div>
+           {{ search_trip_form.destination }}
+        <div id="datetimepicker"></div>
+        <button class="btn btn-default">Cerca</button>
+    </div>
     </div>
     {{ search_trip_form_datetime.as_hidden }}
 </form>

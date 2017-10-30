@@ -31,3 +31,7 @@
 .glyphicon.glyphicon-record{
     color: palegreen;
 }
+
+#datetimepicker{
+    padding-top: 20px;
+}
