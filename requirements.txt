@@ -1,6 +1,5 @@
-django
+django==1.11.4
 django-cities-light
 django-leaflet
-mysqlclient
 django-email-users
-django-bootstrap3
+mysqlclient

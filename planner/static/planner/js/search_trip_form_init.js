@@ -21,6 +21,7 @@ $(function () {
 
 var marker_state = 0;
 var markers = new Array(3);
+var api_key = 'pk.eyJ1IjoiYm9uaXMiLCJhIjoiY2o5NWNmNzFsMWZ5ZDMzbXc4cHU2YndrcSJ9.QZy2V8z1VZQyOqwGfab4Rw';
 
 function render_marker(index, marker) {
     if (markers[index] == null) {
@@ -54,8 +55,15 @@ function show_place_on_map(input_id, city_id) {
                     render_marker(1, marker);
                 }
                 if (marker_state >= 2) {
-                    markers[2] = L.polyline([markers[0].getLatLng(), markers[1].getLatLng()]);
-                    markers[2].addTo(map);
+                    var router = L.Routing.mapbox(api_key);
+                    waypoints = [];
+                    waypoints.push({latLng: markers[0].getLatLng()});
+                    waypoints.push({latLng: markers[1].getLatLng()});
+                    router.route(waypoints, function (err, routes) {
+                        if (!err) {
+                            markers.push(L.Routing.line(routes[0]).addTo(map));
+                        }
+                    });
                 }
             }
         },
