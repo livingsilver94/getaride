@@ -22,6 +22,10 @@
     color: aquamarine;
 }
 
+#map{
+    border: 1px solid #ccc;
+}
+
 .sign-form{
     height: 50%;
     margin-left:10px;
