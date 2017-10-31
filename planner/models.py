@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 from getaride import settings
 from django.core.validators import MinValueValidator, ValidationError, MaxValueValidator, MinLengthValidator, \
     RegexValidator
@@ -42,6 +43,9 @@ class Step(models.Model):
     # Passenger checks are in 'signals' submodule
     def clean(self):
         except_dict = dict()
+        if self.date_origin:
+            if self.Trip.date_origin <= (datetime.now() + datetime.timedelta(hours=24)):
+                except_dict.update({'date_origin': _("You can't start your trip before tomorrow")})
         if self.hour_destination and self.hour_origin:
             if self.hour_destination <= self.hour_origin:
                 except_dict.update({'hour_destination': _("Estimated arrival hour must be later than departure hour")})
