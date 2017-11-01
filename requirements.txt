@@ -1,5 +1,6 @@
 django==1.11.4
+django-autocomplete-light
 django-cities-light
-django-leaflet
 django-email-users
+django-leaflet
 mysqlclient
