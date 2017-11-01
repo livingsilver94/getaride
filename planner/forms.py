@@ -4,6 +4,7 @@ from django import forms
 from django.core.validators import MinLengthValidator
 from .models import PoolingUser, Trip, Step
 from users.forms import UserCreationForm
+from dal import autocomplete
 
 
 class LoginForm(AuthenticationForm):
@@ -15,24 +16,15 @@ class LoginForm(AuthenticationForm):
                                                                  }))
 
 
-class CityInput(forms.NumberInput):
-    template_name = 'planner/widgets/city.html'
-
-    class Media:
-        js = ('planner/js/widgets/city_autocomplete.js',)
-
-
-class CityField(forms.IntegerField):
-    widget = CityInput
-
-
 class SearchTrip(forms.Form):
     """
     Pay attention that id fields are meant to be hidden, since we suppose they come from
     an autocomplete AJAX request via an another CharField.
     """
-    origin = CityField()
-    destination = CityField()
+    origin = forms.CharField(
+        widget=autocomplete.Select2(url='planner:city-autocomplete', attrs={'class': 'city-autocomplete'}))
+    destination = forms.CharField(
+        widget=autocomplete.Select2(url='planner:city-autocomplete', attrs={'class': 'city-autocomplete'}))
     datetime = forms.DateTimeField()
 
 
@@ -54,8 +46,8 @@ class StepForm(forms.ModelForm):
         model = Step
         fields = ['origin', 'destination', 'hour_origin', 'hour_destination', 'max_price']
         widgets = {
-            'origin': CityInput(),
-            'destination': CityInput(),
+            'origin': autocomplete.ModelSelect2(url='planner:city-autocomplete'),
+            'destination': autocomplete.ModelSelect2(url='planner:city-autocomplete'),
             'hour_origin': forms.TimeInput(format='%H:%M'),
             'hour_destination': forms.TimeInput(format='%H:%M'),
         }
