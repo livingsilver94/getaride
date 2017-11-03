@@ -11,7 +11,7 @@ urlpatterns = [
         name='login'),
     url(r'^user/logout/', LogoutView.as_view(), name='logout'),
     url(r'^usersignup/', plannerviews.SignupView.as_view(), name='signup'),
-    url(r'^city-autocomplete/$', plannerviews.CityAutocomplete.as_view(), name="city-autocomplete"),
+    url(r'^city-autocomplete/$', plannerviews.city_autocomplete, name="city-autocomplete"),
     url(r'^city-coordinates/$', plannerviews.city_coordinates, name='city-coordinates'),
     url(r'^newtrip/$', login_required(plannerviews.NewTripView.as_view()), name='new-trip'),
 ]

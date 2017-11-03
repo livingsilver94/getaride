@@ -38,9 +38,6 @@ INSTALLED_APPS = [
     'cities_light',
     'leaflet',
     'users',
-    # Remember: autocomplete-light must be listed before django.contrib.admin
-    'dal',
-    'dal_select2',
 ]
 
 MIDDLEWARE = [

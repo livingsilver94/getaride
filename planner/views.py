@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, CreateView
@@ -6,7 +6,6 @@ from cities_light.models import City
 from .forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet
 from .models import Trip
 from getaride import settings
-from dal import autocomplete
 import json
 
 
@@ -119,9 +118,15 @@ class NewTripView(CreateView):
             self.get_context_data(form=form, formset=formset))
 
 
-class CityAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        return City.objects.filter(name__istartswith=self.q)
+def city_autocomplete(request):
+    if request.is_ajax():
+        cities = City.objects.filter(name__istartswith=request.GET.get('term'))[:10]
+        results = []
+        for city in cities:
+            show_string = '%s, %s' % (city.name, city.region.name)
+            city_json = {'id': city.id, 'label': show_string, 'value': show_string}
+            results.append(city_json)
+    return HttpResponse(json.dumps(results))
 
 
 def city_coordinates(request):

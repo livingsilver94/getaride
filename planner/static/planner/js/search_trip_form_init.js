@@ -1,9 +1,6 @@
 $(function () {
-    $(".city-autocomplete").on("change", function (event) {
-        var val = document.getElementById(event.target.id).value;
-        if (val) {
-            show_place_on_map(event.target.id, val);
-        }
+    $(".city-autocomplete").on("autocompleteselect", function (event, ui) {
+        show_place_on_map(event.target.id, ui.item.id);
     });
 })
 
@@ -54,7 +51,7 @@ function show_place_on_map(input_id, city_id) {
         data: {'city_id': city_id},
         dataType: 'json',
         success: function (coords) {
-            ref_id = "searchtrip_origin";
+            ref_id = "searchtrip_origin_auto";
             if (!$.isEmptyObject(coords)) {
                 var marker = L.marker([coords.lat, coords.lon], {title: coords.name});
                 if (marker_state >= 2) {

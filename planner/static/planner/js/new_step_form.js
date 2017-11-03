@@ -1,13 +1,6 @@
 function set_correct_origin(prev, last) {
-    var new_orig = $(last).find("select[id*='origin']");
-    var old_dest = $(prev).find("select[id*='destination']");
-    new_orig.prop("disabled", true);
-    new_orig.append($('<option>', {
-        value: old_dest.val(),
-        text: $("#" + old_dest.attr("id") + " option:selected").html(),
-        selected: true
-    }));
-
+    $(last).find("input[id*='origin_auto']").prop("disabled", true).val($(prev).find("input[id*='destination_auto']").val());
+    $(last).find("input[type='number'][id*='origin']").val($(prev).find("input[type='number'][id*='destination']").val());
 }
 
 $(function () {
@@ -19,13 +12,14 @@ $(function () {
         deleteText: 'Remove question above', // Text for the delete link
         formCssClass: 'inline-form', // CSS class applied to each form in a formset
         added: function (row) {
+            add_autocomplete(row);
             var forms = $(".inline." + formset_prefix);
             var prev_form = forms.get(forms.length - 2);
             set_correct_origin(prev_form, row);
         },
         removed: function (row) {
             var forms = $(".inline." + formset_prefix);
-            forms.first().find("select").prop("disabled", false);
+            forms.first().find("input").prop("disabled", false);
             if ($('#id_' + formset_prefix + '-TOTAL_FORMS').val() != 1) {
                 set_correct_origin(forms.get(forms.length - 2), forms.get(forms.length - 1));
             }
