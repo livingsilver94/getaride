@@ -6,17 +6,16 @@ $(function () {
 
 // Datepicker init
 $(function () {
-    var picker = $('#datetimepicker').datetimepicker({
+    $('#datetimepicker').datetimepicker({
         format: 'DD/MM/YYYY HH:mm',
         inline: true,
         sideBySide: true,
         stepping: 10,
         minDate: moment().valueOf(),
-    });
-    picker.on("changeDate", function (event) {
-        document.getElementById("searchtrip_datetime").value = picker.date;
-    });
-    picker.show();
+        useCurrent: true,
+    }).on("changeDate", function (event) {
+        document.getElementById("searchtrip_datetime").value = $('#datetimepicker').data().date;
+    }).trigger("changeDate").show();
 });
 
 var marker_state = 0;
