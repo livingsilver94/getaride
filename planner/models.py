@@ -26,7 +26,6 @@ class Trip(models.Model):
     driver = models.ForeignKey(PoolingUser, related_name='driver')
     date_origin = models.DateField(name='date_origin')
     max_num_passengers = models.PositiveIntegerField(validators=[MaxValueValidator(8), MinValueValidator(1)], default=4)
-    is_joinable = models.BooleanField(default=True)
 
 
 class Step(models.Model):
