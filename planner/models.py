@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from .validators import validate_adult
 from cities_light.models import City
 from users.models import User
+import datetime
 
 
 class PoolingUser(models.Model):
@@ -28,7 +29,19 @@ class Trip(models.Model):
     max_num_passengers = models.PositiveIntegerField(validators=[MaxValueValidator(8), MinValueValidator(1)], default=4)
 
 
+class StepManager(models.Manager):
+    join_limit = datetime.timedelta(hours=24)
+
+    def get_queryset(self):
+        # TODO: shit
+        return super().get_queryset().annotate(passenger_count=models.Count('passengers')).filter(
+            passenger_count__lt=models.F('trip__max_num_passengers')).filter(
+            trip__date_origin__gte=datetime.datetime.now() + self.join_limit)
+
+
 class Step(models.Model):
+    joinable = StepManager()
+
     origin = models.ForeignKey(City, related_name='city_origin')
     destination = models.ForeignKey(City, related_name='city_destination')
     hour_origin = models.TimeField()
