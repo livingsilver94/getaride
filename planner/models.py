@@ -30,6 +30,14 @@ class Trip(models.Model):
     max_num_passengers = models.PositiveIntegerField(validators=[MaxValueValidator(8), MinValueValidator(1)], default=4)
     is_joinable = models.BooleanField(default=True)
 
+    def clean(self):
+        except_dict = dict()
+        if self.date_origin:
+            if self.date_origin < (datetime.now().date() + timedelta(days=1)):
+                except_dict.update({'date_origin': _("You can't start your trip before tomorrow")})
+        if except_dict:
+            raise ValidationError(except_dict)
+
 
 class Step(models.Model):
     origin = models.ForeignKey(City, related_name='city_origin')
@@ -44,9 +52,6 @@ class Step(models.Model):
     # Passenger checks are in 'signals' submodule
     def clean(self):
         except_dict = dict()
-        if self.trip.date_origin:
-            if self.trip.date_origin < (datetime.now().date() + timedelta(days=1)):
-                except_dict.update({'date_origin': _("You can't start your trip before tomorrow")})
         if self.hour_destination and self.hour_origin:
             if self.hour_destination <= self.hour_origin:
                 except_dict.update({'hour_destination': _("Estimated arrival hour must be later than departure hour")})
