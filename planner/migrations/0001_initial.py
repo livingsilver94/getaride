@@ -11,7 +11,6 @@ import planner.validators
 
 class Migration(migrations.Migration):
 
-    replaces = [('planner', '0001_initial'), ('planner', '0002_auto_20171101_1616')]
 
     initial = True
 
