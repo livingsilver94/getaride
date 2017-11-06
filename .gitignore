@@ -103,3 +103,5 @@ ENV/
 # personal
 getaride/private_settings.py
 .idea/
+mydatabase
+mydatabase.sqlite3
