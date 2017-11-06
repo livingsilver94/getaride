@@ -4,7 +4,7 @@
 </script>
 {{ search_trip_form.media }}
 <script src="{% static 'planner/js/search_trip_form_init.js' %}"></script>
-<form id="journey_form" class="journey-form col-lg-6">
+<form id="journey_form" class="journey-form col-lg-6" method="get" action="{% url 'planner:search-trip' %}">
     <h2> Organizza il tuo viaggio </h2>
     <div id="journey_basic" class="journey-basic">
         <div class="input-group">
