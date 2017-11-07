@@ -1,12 +1,16 @@
-from django.http import HttpResponse, HttpResponseRedirect
+import datetime
+import json
+
+from cities_light.models import City
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, CreateView, ListView
-from cities_light.models import City
-from .forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet
-from .models import Trip, Step
+
 from getaride import settings
-import json
+from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet
+from planner.models import Trip, Step
 
 
 class HomePageView(TemplateView):
@@ -23,7 +27,14 @@ class SearchTripView(ListView):
     template_name = 'planner/searchtrip.html'
 
     def get_queryset(self):
-        return Step.joinable.filter(origin=self.request.GET['origin'])
+        interval = datetime.timedelta(minutes=30)
+        specified_datetime = datetime.datetime.fromtimestamp(float(self.request.GET['datetime']))
+        datetime_range = (specified_datetime - interval, specified_datetime + interval)
+
+        query = Step.joinable.filter(Q(origin=self.request.GET['origin']) |
+                                     Q(destination=self.request.GET['destination'])).filter(
+            trip__date_origin__range=datetime_range)
+        pass
 
 
 class SignupView(View):

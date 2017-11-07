@@ -11,10 +11,10 @@ $(function () {
         inline: true,
         sideBySide: true,
         stepping: 10,
-        minDate: moment().valueOf(),
+        minDate: moment().add(1, 'days').valueOf(),
         useCurrent: true,
     }).on("changeDate", function (event) {
-        document.getElementById("searchtrip_datetime").value = $('#datetimepicker').data().date;
+        document.getElementById("searchtrip_datetime").value = $('#datetimepicker').data('DateTimePicker').date().unix();
     }).trigger("changeDate").show();
 });
 
