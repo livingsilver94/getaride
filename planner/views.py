@@ -1,10 +1,10 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, View, CreateView
+from django.views.generic import TemplateView, View, CreateView, ListView
 from cities_light.models import City
 from .forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet
-from .models import Trip
+from .models import Trip, Step
 from getaride import settings
 import json
 
@@ -17,6 +17,13 @@ class HomePageView(TemplateView):
         context['search_trip_form'] = SearchTrip(auto_id='searchtrip_%s')
         context['login_form'] = LoginForm(auto_id='login_%s')
         return context
+
+
+class SearchTripView(ListView):
+    template_name = 'planner/searchtrip.html'
+
+    def get_queryset(self):
+        return Step.joinable.filter(origin=self.request.GET['origin'])
 
 
 class SignupView(View):

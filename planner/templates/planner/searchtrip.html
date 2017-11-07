@@ -1,0 +1,9 @@
+{% extends "planner/elements/base_page.html" %}
+{% block head %}
+{% endblock %}
+{% block content %}
+    {% for obj in object_list %}
+        {{ obj.origin }}
+        {{ obj.trip.driver.driving_license }}
+    {% endfor %}
+{% endblock %}
