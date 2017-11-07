@@ -1,12 +1,14 @@
-from django.db import models
-from getaride import settings
+import datetime
+
+from cities_light.models import City
 from django.core.validators import MinValueValidator, ValidationError, MaxValueValidator, MinLengthValidator, \
     RegexValidator
+from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from .validators import validate_adult
-from cities_light.models import City
 from users.models import User
-import datetime
+
+from getaride import settings
+from planner.validators import validate_adult
 
 
 class PoolingUser(models.Model):
@@ -33,7 +35,6 @@ class StepManager(models.Manager):
     join_limit = datetime.timedelta(hours=24)
 
     def get_queryset(self):
-        # TODO: shit
         return super().get_queryset().annotate(passenger_count=models.Count('passengers')).filter(
             passenger_count__lt=models.F('trip__max_num_passengers')).filter(
             trip__date_origin__gte=datetime.datetime.now() + self.join_limit)
@@ -51,7 +52,6 @@ class Step(models.Model):
     trip = models.ForeignKey(Trip, related_name='trip')
     order = models.PositiveIntegerField(default=0)
 
-    # Passenger checks are in 'signals' submodule
     def clean(self):
         except_dict = dict()
         if self.hour_destination and self.hour_origin:
