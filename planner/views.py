@@ -3,14 +3,14 @@ import json
 
 from cities_light.models import City
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
+from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, CreateView, ListView
 
 from getaride import settings
 from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet
-from planner.models import Trip, Step
+from planner.models import Trip
 
 
 class HomePageView(TemplateView):
@@ -28,13 +28,39 @@ class SearchTripView(ListView):
 
     def get_queryset(self):
         interval = datetime.timedelta(minutes=30)
-        specified_datetime = datetime.datetime.fromtimestamp(float(self.request.GET['datetime']))
-        datetime_range = (specified_datetime - interval, specified_datetime + interval)
-
-        query = Step.joinable.filter(Q(origin=self.request.GET['origin']) |
-                                     Q(destination=self.request.GET['destination'])).filter(
-            trip__date_origin__range=datetime_range)
+        usr_datetime = datetime.datetime.fromtimestamp(float(self.request.GET['datetime']))
+        time_min = usr_datetime - interval
+        if time_min.date() < usr_datetime.date():
+            time_min = datetime.time(0, 0)
+        else:
+            time_min = time_min.time()
+        time_max = usr_datetime + interval
+        if time_max.date() > usr_datetime.date():
+            time_max = datetime.time(23, 59)
+        else:
+            time_max = time_max.time()
+        params = self.get_trip_parameters(self.request.GET['origin'], self.request.GET['destination'],
+                                          usr_datetime.date(),
+                                          time_min, time_max)
         pass
+
+    @staticmethod
+    def get_trip_parameters(origin, destination, date, time_min, time_max):
+        # Get, for every Trip, min and max Step order to join to reach the specified destination
+        raw_query = """SELECT origins."order" 'min', destinations."order" 'max', planner_trip.id 'trip_id'
+                          FROM( SELECT planner_step."order", planner_step.trip_id
+                          FROM planner_step WHERE planner_step.origin_id = %s
+                          AND planner_step.hour_origin BETWEEN %s AND %s) origins
+                          INNER JOIN( SELECT planner_step."order", planner_step.trip_id
+                          FROM planner_step WHERE planner_step.destination_id = %s ) destinations
+                          ON origins.trip_id = destinations.trip_id
+                          INNER JOIN planner_trip ON planner_trip.id = destinations.trip_id
+                          WHERE planner_trip.date_origin = %s"""
+        with connection.cursor() as cursor:
+            cursor.execute(raw_query,
+                           [origin, time_min.strftime("%H:%M"), time_max.strftime("%H:%M"), destination, date])
+            rows = cursor.fetchall()
+        return rows
 
 
 class SignupView(View):
