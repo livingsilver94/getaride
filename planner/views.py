@@ -4,13 +4,14 @@ import json
 from cities_light.models import City
 from django.core.exceptions import PermissionDenied
 from django.db import connection
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, CreateView, ListView
 
 from getaride import settings
 from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet
-from planner.models import Trip
+from planner.models import Trip, Step
 
 
 class HomePageView(TemplateView):
@@ -42,6 +43,22 @@ class SearchTripView(ListView):
         params = self.get_trip_parameters(self.request.GET['origin'], self.request.GET['destination'],
                                           usr_datetime.date(),
                                           time_min, time_max)
+        context = list()
+        for par_row in params:
+            steps = Step.joinable.filter(order__range=(par_row[0], par_row[1]), trip=par_row[2]).order_by(
+                'order').only('origin__name', 'destination__name', 'hour_origin', 'hour_destination',
+                              'trip__driver__base_user__first_name', 'order')
+            contiguous = True
+            for i in range(steps.first().order, steps.last().order + 1):
+                if i != steps[i].order:
+                    contiguous = False
+                    break
+            if contiguous:
+                context.append({'steps': [step.origin.name for step in steps] + [steps.last().destination.name],
+                                'hour_origin': steps[0].hour_origin,
+                                'hour_destination': steps.last().hour_destination,
+                                'driver': steps[0].trip.driver.base_user.first_name,
+                                'step_range': (par_row[0], par_row[1])})
         pass
 
     @staticmethod
