@@ -3,8 +3,6 @@ import json
 
 from cities_light.models import City
 from django.core.exceptions import PermissionDenied
-from django.db import connection
-from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, CreateView, ListView
@@ -25,9 +23,12 @@ class HomePageView(TemplateView):
 
 
 class SearchTripView(ListView):
+    # Pretty sure this view can be better implemented, but let's leave it as is for now
     template_name = 'planner/searchtrip.html'
+    model = Step
 
-    def get_queryset(self):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         interval = datetime.timedelta(minutes=30)
         usr_datetime = datetime.datetime.fromtimestamp(float(self.request.GET['datetime']))
         time_min = usr_datetime - interval
@@ -40,44 +41,30 @@ class SearchTripView(ListView):
             time_max = datetime.time(23, 59)
         else:
             time_max = time_max.time()
-        params = self.get_trip_parameters(self.request.GET['origin'], self.request.GET['destination'],
-                                          usr_datetime.date(),
-                                          time_min, time_max)
-        context = list()
-        for par_row in params:
-            steps = Step.joinable.filter(order__range=(par_row[0], par_row[1]), trip=par_row[2]).order_by(
-                'order').only('origin__name', 'destination__name', 'hour_origin', 'hour_destination',
-                              'trip__driver__base_user__first_name', 'order')
+        params = Step.get_order_range(self.request.GET['origin'], self.request.GET['destination'],
+                                      usr_datetime.date(), time_min, time_max)
+        trip_data = list()
+        for trip in params:
+            steps = Step.free.filter(order__range=(trip['min_order'], trip['max_order']),
+                                     trip=trip['trip_id']).order_by('order').only('origin__name',
+                                                                                  'destination__name',
+                                                                                  'hour_origin',
+                                                                                  'hour_destination',
+                                                                                  'trip__driver__base_user__first_name',
+                                                                                  'order')
             contiguous = True
-            for i in range(steps.first().order, steps.last().order + 1):
-                if i != steps[i].order:
+            for i in range(1, len(steps)):
+                if steps[i].order != steps[i-1].order+1:
                     contiguous = False
                     break
             if contiguous:
-                context.append({'steps': [step.origin.name for step in steps] + [steps.last().destination.name],
-                                'hour_origin': steps[0].hour_origin,
-                                'hour_destination': steps.last().hour_destination,
-                                'driver': steps[0].trip.driver.base_user.first_name,
-                                'step_range': (par_row[0], par_row[1])})
-        pass
-
-    @staticmethod
-    def get_trip_parameters(origin, destination, date, time_min, time_max):
-        # Get, for every Trip, min and max Step order to join to reach the specified destination
-        raw_query = """SELECT origins."order" 'min', destinations."order" 'max', planner_trip.id 'trip_id'
-                          FROM( SELECT planner_step."order", planner_step.trip_id
-                          FROM planner_step WHERE planner_step.origin_id = %s
-                          AND planner_step.hour_origin BETWEEN %s AND %s) origins
-                          INNER JOIN( SELECT planner_step."order", planner_step.trip_id
-                          FROM planner_step WHERE planner_step.destination_id = %s ) destinations
-                          ON origins.trip_id = destinations.trip_id
-                          INNER JOIN planner_trip ON planner_trip.id = destinations.trip_id
-                          WHERE planner_trip.date_origin = %s"""
-        with connection.cursor() as cursor:
-            cursor.execute(raw_query,
-                           [origin, time_min.strftime("%H:%M"), time_max.strftime("%H:%M"), destination, date])
-            rows = cursor.fetchall()
-        return rows
+                trip_data.append({'steps': [step.origin.name for step in steps] + [steps.last().destination.name],
+                                  'hour_origin': steps[0].hour_origin,
+                                  'hour_destination': steps.last().hour_destination,
+                                  'driver': steps[0].trip.driver.base_user.first_name,
+                                  'step_range': (trip['min_order'], trip['max_order'])})
+        context['trip_data'] = trip_data
+        return context
 
 
 class SignupView(View):

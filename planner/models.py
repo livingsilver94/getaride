@@ -3,7 +3,7 @@ import datetime
 from cities_light.models import City
 from django.core.validators import MinValueValidator, ValidationError, MaxValueValidator, MinLengthValidator, \
     RegexValidator
-from django.db import models
+from django.db import models, connection
 from django.utils.translation import ugettext_lazy as _
 from users.models import User
 
@@ -41,7 +41,7 @@ class StepManager(models.Manager):
 
 
 class Step(models.Model):
-    joinable = StepManager()
+    free = StepManager()
 
     origin = models.ForeignKey(City, related_name='city_origin')
     destination = models.ForeignKey(City, related_name='city_destination')
@@ -61,3 +61,31 @@ class Step(models.Model):
                 except_dict.update({'destination': _("Your destination must be different from origin")})
         if except_dict:
             raise ValidationError(except_dict)
+
+    @staticmethod
+    def get_order_range(origin, destination, date, time_min, time_max):
+        """
+        Executes a raw query to get, in every row, the trip ID, the minimum Step where the user has to hop on and
+        the maximum Step where the user have to hop off to reach the destination.
+        :param origin: city ID where to start the trip
+        :param destination: city ID where user wants to go
+        :param date: a date object, meaning the trip day
+        :param time_min: a time object, meaning the lower limit of a time range
+        :param time_max: a time object, meaning the upper limit of a time range
+        :return: a list of dicts. Every dict contains the minimum Step's order, the maximum one and the trip ID
+        """
+        ret = list()
+        with connection.cursor() as cursor:
+            cursor.execute("""SELECT origins."order", destinations."order", planner_trip.id
+                              FROM( SELECT planner_step."order", planner_step.trip_id
+                              FROM planner_step WHERE planner_step.origin_id = %s
+                              AND planner_step.hour_origin BETWEEN %s AND %s) origins
+                              INNER JOIN( SELECT planner_step."order", planner_step.trip_id
+                              FROM planner_step WHERE planner_step.destination_id = %s ) destinations
+                              ON origins.trip_id = destinations.trip_id
+                              INNER JOIN planner_trip ON planner_trip.id = destinations.trip_id
+                              WHERE planner_trip.date_origin = %s""",
+                           [origin, time_min.strftime("%H:%M"), time_max.strftime("%H:%M"), destination, date])
+            for row in cursor.fetchall():
+                ret.append({'min_order': row[0], 'max_order': row[1], 'trip_id': row[2]})
+        return ret
