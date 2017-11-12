@@ -1,0 +1,18 @@
+{% extends "planner/elements/base_page.html" %}
+{% load static %}
+{% block head %}
+{#    <script src="https://cdn.rawgit.com/elo80ka/django-dynamic-formset/v1.2.2/src/jquery.formset.js"></script>#}
+
+
+{% endblock %}
+{% block content %}
+    <form action="{% url 'planner:settings' %}" method="post">
+        {% csrf_token %}
+        {{ form.errors }}
+        {{ form.as_p }}
+
+
+        <button type="submit">Save</button>
+    </form>
+
+{% endblock %}

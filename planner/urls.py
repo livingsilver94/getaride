@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^city-autocomplete/$', plannerviews.city_autocomplete, name="city-autocomplete"),
     url(r'^city-coordinates/$', plannerviews.city_coordinates, name='city-coordinates'),
     url(r'^newtrip/$', login_required(plannerviews.NewTripView.as_view()), name='new-trip'),
+    url(r'^settings/$', login_required(plannerviews.Settings.as_view() ) , name='settings'),
 ]

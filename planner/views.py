@@ -3,10 +3,11 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, CreateView
 from cities_light.models import City
-from .forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet
-from .models import Trip
+from .forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet, SettingsForm
+from .models import Trip, PoolingUser
 from getaride import settings
 import json
+
 
 
 class HomePageView(TemplateView):
@@ -134,3 +135,40 @@ def city_coordinates(request):
         city = City.objects.get(pk=request.GET.get('city_id'))
         coords = {'name': city.name, 'lat': str(city.latitude), 'lon': str(city.longitude)}
     return HttpResponse(json.dumps(coords))
+
+
+
+
+
+
+
+class Settings(CreateView):
+    template_name = 'planner/settings_page.html'
+    model = PoolingUser
+    form_class = SettingsForm
+    object = None
+
+    def get(self, request, *args, **kwargs):
+
+        if not request.user.poolinguser.is_driver():
+            self.object = None
+            form = self.get_form(self.get_form_class())
+            return self.render_to_response(
+                self.get_context_data(form=form)
+            )
+        raise PermissionDenied
+
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form(self.get_form_class())
+        if form is not None:
+            self.object = form.save(commit=False)
+            driving_license = self.request.user.poolinguser
+            driving_license.save()
+            return redirect(settings.LOGIN_REDIRECT_URL)
+        else:
+            return self.render_to_response(
+                self.get_context_data(form=form)
+            )
+
+
