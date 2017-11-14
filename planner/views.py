@@ -1,11 +1,14 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView, View, CreateView
 from cities_light.models import City
 from .forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet, SettingsForm
 from .models import Trip, PoolingUser
 from getaride import settings
+from django.views.generic.edit import UpdateView
+from django.core.urlresolvers import reverse_lazy
+
 import json
 
 
@@ -142,33 +145,11 @@ def city_coordinates(request):
 
 
 
-class Settings(CreateView):
-    template_name = 'planner/settings_page.html'
+class DrivingLicenseUpdate(UpdateView):
     model = PoolingUser
-    form_class = SettingsForm
-    object = None
+    fields = ['driving_license']
+    template_name_suffix = '_update_form'
+    success_url = reverse_lazy('planner:homepage')
 
-    def get(self, request, *args, **kwargs):
-
-        if not request.user.poolinguser.is_driver():
-            self.object = None
-            form = self.get_form(self.get_form_class())
-            return self.render_to_response(
-                self.get_context_data(form=form)
-            )
-        raise PermissionDenied
-
-
-    def post(self, request, *args, **kwargs):
-        form = self.get_form(self.get_form_class())
-        if form is not None:
-            self.object = form.save(commit=False)
-            driving_license = self.request.user.poolinguser
-            driving_license.save()
-            return redirect(settings.LOGIN_REDIRECT_URL)
-        else:
-            return self.render_to_response(
-                self.get_context_data(form=form)
-            )
-
-
+    def get_object(self):
+        return get_object_or_404(PoolingUser, pk=self.request.user.poolinguser.pk)
