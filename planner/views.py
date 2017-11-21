@@ -1,8 +1,10 @@
 import datetime
 import json
+from collections import defaultdict
 
 from cities_light.models import City
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, CreateView, ListView
@@ -27,44 +29,30 @@ class SearchTripView(ListView):
     template_name = 'planner/searchtrip.html'
     model = Step
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        interval = datetime.timedelta(minutes=30)
-        usr_datetime = datetime.datetime.fromtimestamp(float(self.request.GET['datetime']))
-        time_min = usr_datetime - interval
-        if time_min.date() < usr_datetime.date():
-            time_min = datetime.time(0, 0)
-        else:
-            time_min = time_min.time()
-        time_max = usr_datetime + interval
-        if time_max.date() > usr_datetime.date():
-            time_max = datetime.time(23, 59)
-        else:
-            time_max = time_max.time()
-        params = Step.get_order_range(self.request.GET['origin'], self.request.GET['destination'],
-                                      usr_datetime.date(), time_min, time_max)
-        trip_data = list()
-        for trip in params:
-            steps = Step.free.filter(order__range=(trip['min_order'], trip['max_order']),
-                                     trip=trip['trip_id']).order_by('order').only('origin__name',
-                                                                                  'destination__name',
-                                                                                  'hour_origin',
-                                                                                  'hour_destination',
-                                                                                  'trip__driver__base_user__first_name',
-                                                                                  'order')
-            contiguous = True
-            for i in range(1, len(steps)):
-                if steps[i].order != steps[i-1].order+1:
-                    contiguous = False
-                    break
-            if contiguous:
-                trip_data.append({'steps': [step.origin.name for step in steps] + [steps.last().destination.name],
-                                  'hour_origin': steps[0].hour_origin,
-                                  'hour_destination': steps.last().hour_destination,
-                                  'driver': steps[0].trip.driver.base_user.first_name,
-                                  'step_range': (trip['min_order'], trip['max_order'])})
-        context['trip_data'] = trip_data
-        return context
+    def get_queryset(self):
+        datetm = datetime.datetime.fromtimestamp(float(self.request.GET['datetime']))
+        time_min, time_max = Step.get_valid_interval_minutes(datetm, 30)
+        origin = self.request.GET['origin']
+        destination = self.request.GET['destination']
+        q_res = Step.free.filter(
+            Q(destination=destination) | Q(origin=origin, hour_origin__range=(time_min, time_max)),
+            trip__date_origin=datetm.date()).order_by('trip', 'order')
+        if len(q_res):
+            trips = defaultdict(list)
+            for step in q_res:
+                trips[step.trip_id].append(step)
+            for step_list in trips.values():
+                success = True
+                if len(step_list) == 1:
+                    if step_list[0].origin != origin or step_list[0].destination != destination:
+                        success = False
+                else:
+                    for i in range(1, len(step_list)):
+                        if step_list[i].order != step_list[i - 1].order + 1:
+                            success = False
+                            break
+                if success:
+                    yield step_list
 
 
 class SignupView(View):
