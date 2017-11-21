@@ -1,10 +1,8 @@
 import datetime
-from collections import defaultdict
 
 from cities_light.models import City
 from django.core import validators as valids
-from django.db import models, connection
-from django.db.models import Q
+from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from users.models import User
 
@@ -34,7 +32,7 @@ class Trip(models.Model):
 
 
 class StepManager(models.Manager):
-    join_limit = datetime.timedelta(days=1)
+    join_limit = datetime.timedelta(days=-365)
 
     def get_queryset(self):
         return super().get_queryset().annotate(passenger_count=models.Count('passengers')).filter(

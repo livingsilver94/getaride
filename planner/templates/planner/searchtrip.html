@@ -2,8 +2,16 @@
 {% block head %}
 {% endblock %}
 {% block content %}
-    {% for obj in object_list %}
-        {{ obj.origin }}
-        {{ obj.trip.driver.driving_license }}
+    {% for trip in object_list %}
+        <div class="trip_result">
+        <span>
+            {% for step in trip %}
+                {{ step.origin.name|add:" -> " }}
+            {% endfor %}
+            {% with trip|last as last %}
+                {{ last.destination.name }}
+            {% endwith %}
+        </span>
+        </div>
     {% endfor %}
 {% endblock %}
