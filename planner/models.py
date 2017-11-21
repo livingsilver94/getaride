@@ -32,7 +32,7 @@ class Trip(models.Model):
 
 
 class StepManager(models.Manager):
-    join_limit = datetime.timedelta(days=-365)
+    join_limit = datetime.timedelta(days=1)
 
     def get_queryset(self):
         return super().get_queryset().annotate(passenger_count=models.Count('passengers')).filter(
