@@ -1,11 +1,10 @@
 import datetime
-import json
 from collections import defaultdict
 
 from cities_light.models import City
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, CreateView, ListView
 
@@ -18,16 +17,14 @@ class HomePageView(TemplateView):
     template_name = 'planner/homepage.html'
 
     def get_context_data(self, **kwargs):
-        context = super(HomePageView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['search_trip_form'] = SearchTrip(auto_id='searchtrip_%s')
         context['login_form'] = LoginForm(auto_id='login_%s')
         return context
 
 
 class SearchTripView(ListView):
-    # Pretty sure this view can be better implemented, but let's leave it as is for now
     template_name = 'planner/searchtrip.html'
-    model = Step
 
     def get_queryset(self):
         datetm = datetime.datetime.fromtimestamp(float(self.request.GET['datetime']))
@@ -47,8 +44,8 @@ class SearchTripView(ListView):
                     if step_list[0].origin != origin or step_list[0].destination != destination:
                         success = False
                 else:
-                    for i in range(1, len(step_list)):
-                        if step_list[i].order != step_list[i - 1].order + 1:
+                    for step, prev_step in zip(step_list[1:], step_list):
+                        if step.order != prev_step.order + 1:
                             success = False
                             break
                 if success:
@@ -62,20 +59,20 @@ class SignupView(View):
     This class will use get() or post() depending on the http request.The method that will "decide" what to do
     is dispatch(), that has not been overridden.
     """
-    _user_form_prefix = 'user_signup'
-    _profile_form_prefix = 'profile_signup'
-    _form_context = {
-        _user_form_prefix: UserForm(prefix=_user_form_prefix),
-        _profile_form_prefix: PoolingUserForm(prefix=_profile_form_prefix),
+    user_form_prefix = 'user_signup'
+    profile_form_prefix = 'profile_signup'
+    form_context = {
+        user_form_prefix: UserForm(prefix=user_form_prefix),
+        profile_form_prefix: PoolingUserForm(prefix=profile_form_prefix),
     }
     template_name = 'planner/signup.html'
 
     def get(self, request):
-        return render(request, self.template_name, context=self._form_context)
+        return render(request, self.template_name, context=self.form_context)
 
     def post(self, request):
-        user_form = UserForm(request.POST, prefix=self._user_form_prefix)
-        profile_form = PoolingUserForm(request.POST, prefix=self._profile_form_prefix)
+        user_form = UserForm(request.POST, prefix=self.user_form_prefix)
+        profile_form = PoolingUserForm(request.POST, prefix=self.profile_form_prefix)
         if all((user_form.is_valid(), profile_form.is_valid())):
             user = user_form.save()
             profile = profile_form.save(commit=False)
@@ -84,8 +81,8 @@ class SignupView(View):
             return redirect(settings.LOGIN_REDIRECT_URL)
         else:
             return render(request, self.template_name, context={
-                self._user_form_prefix: user_form,
-                self._profile_form_prefix: profile_form
+                self.user_form_prefix: user_form,
+                self.profile_form_prefix: profile_form
             })
 
 
@@ -162,11 +159,11 @@ def city_autocomplete(request):
             show_string = '%s, %s' % (city.name, city.region.name)
             city_json = {'id': city.id, 'label': show_string, 'value': show_string}
             results.append(city_json)
-    return HttpResponse(json.dumps(results))
+        return JsonResponse(results, safe=False)
 
 
 def city_coordinates(request):
     if request.is_ajax():
         city = City.objects.get(pk=request.GET.get('city_id'))
-        coords = {'name': city.name, 'lat': str(city.latitude), 'lon': str(city.longitude)}
-    return HttpResponse(json.dumps(coords))
+        coords = {'name': city.name, 'lat': city.latitude, 'lon': city.longitude}
+        return JsonResponse(coords)
