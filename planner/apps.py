@@ -5,4 +5,4 @@ class PlannerConfig(AppConfig):
     name = 'planner'
 
     def ready(self):
-        pass
+        import planner.signals

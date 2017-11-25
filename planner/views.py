@@ -3,12 +3,14 @@ from collections import defaultdict
 
 from cities_light.models import City
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
+from django.db.models import Q, Count, F
+from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, CreateView, ListView
 
 from getaride import settings
+from planner.exceptions import StepIsFullException
 from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet
 from planner.models import Trip, Step
 
@@ -50,6 +52,22 @@ class SearchTripView(ListView):
                             break
                 if success:
                     yield step_list
+
+
+class JoinTripView(View):
+    def post(self, request, trip_id):
+        step_min, step_max = request.POST['step_min'], request.POST['step_max']
+        try:
+            with transaction.atomic():
+                steps = Step.free.filter(trip=trip_id, order__range=(step_min, step_max)).annotate(
+                    trip__max_num_passengers=F('trip__max_num_passengers')).annotate(Count('passengers'))
+                for step in steps:
+                    step.passengers.add(self.request.user.poolinguser)
+        except StepIsFullException:
+            # TODO: implement error messages to pass to the redirected page. As for now, it's not priority.
+            redirect('planner:searh-trip')
+        else:
+            return redirect('planner:homepage')
 
 
 class SignupView(View):

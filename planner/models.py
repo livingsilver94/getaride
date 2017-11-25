@@ -32,15 +32,16 @@ class Trip(models.Model):
 
 
 class StepManager(models.Manager):
-    join_limit = datetime.timedelta(days=1)
+    join_limit = datetime.timedelta(days=-365)
 
     def get_queryset(self):
-        return super().get_queryset().annotate(passenger_count=models.Count('passengers')).filter(
-            passenger_count__lt=models.F('trip__max_num_passengers')).filter(
+        return super().get_queryset().annotate(models.Count('passengers')).filter(
+            passengers__count__lt=models.F('trip__max_num_passengers')).filter(
             trip__date_origin__gte=datetime.datetime.now() + self.join_limit)
 
 
 class Step(models.Model):
+    objects = models.Manager()
     free = StepManager()
 
     origin = models.ForeignKey(City, related_name='city_origin')
