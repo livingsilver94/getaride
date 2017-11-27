@@ -1,0 +1,23 @@
+{% extends "planner/elements/base_page.html" %}
+{% block head %}
+{% endblock %}
+{% block content %}
+    {% for trip in object_list %}
+        <div class="trip_result">
+        <span>
+            {% for step in trip %}
+                {{ step.origin.name|add:" -> " }}
+            {% endfor %}
+            {% with trip|last as last %}
+                {{ last.destination.name }}
+                </span>
+                <form method="post" action="{% url 'planner:join-trip' trip_id=trip.0.trip.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="step_min" value="{{ trip.0.order }}"/>
+                <input type="hidden" name="step_max" value="{{ last.order }}"/>
+            {% endwith %}
+            <input type="submit"/>
+            </form>
+        </div>
+    {% endfor %}
+{% endblock %}
