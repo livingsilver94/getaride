@@ -23,6 +23,15 @@ var marker_state = 0;
 var markers = new Array();
 var router = L.Routing.mapbox('pk.eyJ1IjoiYm9uaXMiLCJhIjoiY2o5NWNmNzFsMWZ5ZDMzbXc4cHU2YndrcSJ9.QZy2V8z1VZQyOqwGfab4Rw');
 
+var greenIcon = new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 function render_marker(index, marker) {
     if (markers[index] == null) {
         marker_state++;
@@ -39,7 +48,12 @@ function show_route() {
     waypoints.push({latLng: markers[1].getLatLng()});
     router.route(waypoints, function (err, routes) {
         if (!err) {
-            markers.push(L.Routing.line(routes[0]));
+            markers.push(L.Routing.line(routes[0], options= {
+			styles: [
+				{color: 'black', opacity: 0.15, weight: 9},
+				{color: 'white', opacity: 0.8, weight: 6},
+				{color: 'chartreuse', opacity: 1, weight: 2}
+			]}));
             markers[2].addTo(map);
         }
     });
@@ -66,6 +80,7 @@ function show_place_on_map(input_id, city_id) {
                     }
                 }
                 if (input_id === ref_id) {
+                    marker.setIcon(greenIcon);
                     render_marker(0, marker);
                 }
                 else {
