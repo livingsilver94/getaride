@@ -1,8 +1,8 @@
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
-from planner.exceptions import StepIsFullException
 
-from .models import Step
+from planner.exceptions import StepIsFullException
+from planner.models import Step
 
 
 @receiver(m2m_changed, sender=Step.passengers.through)

@@ -1,8 +1,9 @@
 from django.conf.urls import url
-from django.contrib.auth.views import LogoutView, LoginView
 from django.contrib.auth.decorators import login_required
-from .forms import LoginForm
+from django.contrib.auth.views import LogoutView, LoginView
+
 import planner.views as plannerviews
+from planner.forms import LoginForm
 
 app_name = 'planner'
 urlpatterns = [

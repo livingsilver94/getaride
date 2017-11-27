@@ -3,8 +3,8 @@ from collections import defaultdict
 
 from cities_light.models import City
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q, Count, F
 from django.db import transaction
+from django.db.models import Q, Count, F
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, View, CreateView, ListView

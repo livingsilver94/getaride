@@ -1,14 +1,10 @@
 import datetime
 
 from cities_light.models import City
+from cities_light.models import City
 from django.core import validators as valids
 from django.db import models
-from getaride import settings
-from django.core.validators import MinValueValidator, ValidationError, MaxValueValidator, MinLengthValidator, \
-    RegexValidator
 from django.utils.translation import ugettext_lazy as _
-from .validators import validate_adult
-from cities_light.models import City
 from users.models import User
 
 from getaride import settings

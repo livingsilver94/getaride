@@ -1,10 +1,12 @@
-from django.test import TestCase
-from .models import PoolingUser, Step, Trip
-from django.core.exceptions import ValidationError
-from datetime import timedelta
 from datetime import datetime
-from .validators import validate_adult
+from datetime import timedelta
+
 from cities_light.models import City
+from django.core.exceptions import ValidationError
+from django.test import TestCase
+
+from .models import PoolingUser, Step, Trip
+from .validators import validate_adult
 
 
 class PoolingUserTest(TestCase):

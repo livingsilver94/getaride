@@ -1,9 +1,10 @@
-from django.contrib.auth.forms import AuthenticationForm
-from django.forms.models import inlineformset_factory
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 from django.core.validators import MinLengthValidator
-from .models import PoolingUser, Trip, Step
+from django.forms.models import inlineformset_factory
 from users.forms import UserCreationForm
+
+from planner.models import PoolingUser, Trip, Step
 
 
 class LoginForm(AuthenticationForm):
