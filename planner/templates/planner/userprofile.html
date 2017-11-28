@@ -1,0 +1,12 @@
+{% extends "planner/elements/base_page.html" %}
+{% block head %}{% endblock %}
+{% block content %}
+    {{ viewed_user }}
+    {% if driving_license_form %}
+        <form method="post" action="{% url 'planner:user-profile' user_id=user.pk %}">
+            {% csrf_token %}
+            {{ driving_license_form.as_p }}
+            <input type="submit"/>
+        </form>
+    {% endif %}
+{% endblock %}

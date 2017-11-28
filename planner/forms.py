@@ -77,8 +77,7 @@ class UserForm(UserCreationForm):
         self['password1'].field.validators = [MinLengthValidator(6)]
 
 
-
-class SettingsForm(forms.ModelForm):
+class DrivingLicenseForm(forms.ModelForm):
     class Meta:
         model = PoolingUser
         fields = ['driving_license']

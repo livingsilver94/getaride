@@ -3,18 +3,17 @@ from collections import defaultdict
 
 from cities_light.models import City
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse_lazy
 from django.db import transaction
 from django.db.models import Q, Count, F
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import TemplateView, View, CreateView, ListView
-from django.views.generic.edit import UpdateView
+from users.models import User
 
 from getaride import settings
 from planner.exceptions import StepIsFullException
-from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet
-from planner.models import PoolingUser, Trip, Step
+from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet, DrivingLicenseForm
+from planner.models import Trip, Step
 
 
 class HomePageView(TemplateView):
@@ -96,7 +95,7 @@ class SignupView(View):
         if all((user_form.is_valid(), profile_form.is_valid())):
             user = user_form.save()
             profile = profile_form.save(commit=False)
-            profile.base_user_id = user.id
+            profile.base_user_id = user.pk
             profile.save()
             return redirect(settings.LOGIN_REDIRECT_URL)
         else:
@@ -123,10 +122,7 @@ class NewTripView(CreateView):
             form = self.get_form(self.get_form_class())
             step_formset = StepFormSet()
             return self.render_to_response(
-                self.get_context_data(form=form,
-                                      formset=step_formset,
-                                      )
-            )
+                self.get_context_data(form=form, formset=step_formset, ))
         raise PermissionDenied
 
     def post(self, request, *args, **kwargs):
@@ -177,7 +173,7 @@ def city_autocomplete(request):
         results = []
         for city in cities:
             show_string = '%s, %s' % (city.name, city.region.name)
-            city_json = {'id': city.id, 'label': show_string, 'value': show_string}
+            city_json = {'id': city.pk, 'label': show_string, 'value': show_string}
             results.append(city_json)
         return JsonResponse(results, safe=False)
 
@@ -189,11 +185,18 @@ def city_coordinates(request):
         return JsonResponse(coords)
 
 
-class UserProfileView(UpdateView):
-    model = PoolingUser
-    fields = ['driving_license']
-    template_name_suffix = '_update_form'
-    success_url = reverse_lazy('planner:homepage')
+class UserProfileView(TemplateView):
+    template_name = 'planner/userprofile.html'
 
-    def get_object(self):
-        return get_object_or_404(PoolingUser, pk=self.request.user.poolinguser.pk)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if int(kwargs['user_id']) == self.request.user.pk:
+            usr = self.request.user
+            context['driving_license_form'] = DrivingLicenseForm()
+        else:
+            usr = get_object_or_404(User, pk=kwargs['user_id'])
+        if usr.poolinguser.is_driver():
+            # TODO: get list of trips
+            pass
+        context['viewed_user'] = usr
+        return context
