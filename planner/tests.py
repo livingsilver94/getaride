@@ -1,8 +1,7 @@
 from django.test import TestCase
-from .models import PoolingUser, Step, Trip
+from .models import PoolingUser, Step
 from django.core.exceptions import ValidationError
-from datetime import timedelta
-from datetime import datetime
+import datetime
 from .validators import validate_adult
 from cities_light.models import City
 
@@ -17,11 +16,8 @@ class PoolingUserTest(TestCase):
         self.assertTrue(usr.is_driver())
 
     def test_adult_validator(self):
-        self.assertRaises(ValidationError, lambda: validate_adult(datetime.today()))
-        self.assertIsNone(validate_adult(datetime(1987, 1, 1)))
-
-    def cellphon_number_validator(self):
-        pass
+        self.assertRaises(ValidationError, lambda: validate_adult(datetime.datetime.today()))
+        self.assertIsNone(validate_adult(datetime.datetime(1987, 1, 1)))
 
 
 class StepTest(TestCase):
@@ -36,11 +32,3 @@ class StepTest(TestCase):
         self.assertRaises(ValidationError, lambda: step.clean())
         step.destination = City(id=1)
         self.assertIsNone(step.clean())
-
-class TripTest(TestCase):
-    def test_clean_method(self):
-        trip = Trip()
-        trip.date_origin = datetime.now().date()
-        self.assertRaises(ValidationError, lambda: trip.clean())
-        trip.date_origin = datetime.now().date() + timedelta(days=1)
-        self.assertIsNone(trip.clean())

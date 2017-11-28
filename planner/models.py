@@ -1,6 +1,4 @@
 from django.db import models
-from datetime import timedelta
-from datetime import datetime
 from getaride import settings
 from django.core.validators import MinValueValidator, ValidationError, MaxValueValidator, MinLengthValidator, \
     RegexValidator
@@ -29,14 +27,6 @@ class Trip(models.Model):
     date_origin = models.DateField(name='date_origin')
     max_num_passengers = models.PositiveIntegerField(validators=[MaxValueValidator(8), MinValueValidator(1)], default=4)
     is_joinable = models.BooleanField(default=True)
-
-    def clean(self):
-        except_dict = dict()
-        if self.date_origin:
-            if self.date_origin < (datetime.now().date() + timedelta(days=1)):
-                except_dict.update({'date_origin': _("You can't start your trip before tomorrow")})
-        if except_dict:
-            raise ValidationError(except_dict)
 
 
 class Step(models.Model):
