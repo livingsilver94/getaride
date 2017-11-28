@@ -32,10 +32,6 @@ var greenIcon = new L.Icon({
 });
 
 
-
-
-
-
 function render_marker(index, marker) {
     if (markers[index] == null) {
         marker_state++;
@@ -52,10 +48,13 @@ function show_route() {
     waypoints.push({latLng: markers[1].getLatLng()});
     router.route(waypoints, function (err, routes) {
         if (!err) {
-            markers.push(L.Routing.line(routes[0],options=
+            markers.push(L.Routing.line(routes[0], options = {
+                styles: [
                     {color: 'black', opacity: 0.15, weight: 9},
                     {color: 'white', opacity: 0.8, weight: 6},
-                    {color: 'chartreuse', opacity: 1, weight: 2}));
+                    {color: 'chartreuse', opacity: 1, weight: 2}
+                    ]
+            }));
             markers[2].addTo(map);
         }
     });
