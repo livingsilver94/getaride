@@ -11,7 +11,7 @@
             {% with trip|last as last %}
                 {{ last.destination.name }}
                 </span>
-                <form method="post" action="{% url 'planner:join-trip' trip_id=trip.0.trip.id %}">
+                <form method="post" action="{% url 'planner:trip-join' trip_id=trip.0.trip.id %}">
                 {% csrf_token %}
                 <input type="hidden" name="step_min" value="{{ trip.0.order }}"/>
                 <input type="hidden" name="step_max" value="{{ last.order }}"/>

@@ -1,5 +1,4 @@
-{% url 'planner:login' as login_url %}
-<form method="post" action="{% url 'planner:login' %}">
+<form method="post" action="{% url 'planner:user-login' %}">
     {% csrf_token %}
     <div class="input-group input-group-lg">
         <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i> </span>

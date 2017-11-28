@@ -6,7 +6,7 @@
     {{ formset.media }}
 {% endblock %}
 {% block content %}
-    <form action="{% url 'planner:new-trip' %}" method="post">
+    <form action="{% url 'planner:trip-create' %}" method="post">
         {% csrf_token %}
         {{ form.errors }}
         {{ form.as_p }}

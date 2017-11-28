@@ -14,8 +14,7 @@ from django.views.generic.edit import UpdateView
 from getaride import settings
 from planner.exceptions import StepIsFullException
 from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet
-from planner.models import Trip, Step
-from .models import PoolingUser
+from planner.models import PoolingUser, Trip, Step
 
 
 class HomePageView(TemplateView):
@@ -190,7 +189,7 @@ def city_coordinates(request):
         return JsonResponse(coords)
 
 
-class DrivingLicenseUpdate(UpdateView):
+class UserProfileView(UpdateView):
     model = PoolingUser
     fields = ['driving_license']
     template_name_suffix = '_update_form'
