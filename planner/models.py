@@ -31,6 +31,13 @@ class Trip(models.Model):
     max_num_passengers = models.PositiveIntegerField(validators=[valids.MaxValueValidator(8),
                                                                  valids.MinValueValidator(1)], default=4)
 
+    def clean(self):
+        except_dict = dict()
+        if self.date_origin < datetime.datetime.now().date() + datetime.timedelta(days=1):
+            except_dict.update({'date_origin': _("Departure date must be after current date")})
+        if except_dict:
+            raise valids.ValidationError(except_dict)
+
 
 class StepManager(models.Manager):
     join_limit = datetime.timedelta(days=1)
