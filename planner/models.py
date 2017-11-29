@@ -34,7 +34,7 @@ class Trip(models.Model):
     def clean(self):
         except_dict = dict()
         if self.date_origin < datetime.datetime.now().date() + datetime.timedelta(days=1):
-            except_dict.update({'date_origin': _("Departure date must be after current date")})
+            except_dict.update({'date_origin': _("Departure date must be one day later than current date")})
         if except_dict:
             raise valids.ValidationError(except_dict)
 
