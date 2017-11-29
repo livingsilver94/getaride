@@ -1,5 +1,4 @@
 import datetime
-from collections import defaultdict
 
 from cities_light.models import City
 from django.core.exceptions import PermissionDenied
@@ -38,10 +37,7 @@ class SearchTripView(ListView):
             Q(destination=destination) | Q(origin=origin, hour_origin__range=(time_min, time_max)),
             trip__date_origin=datetm.date()).order_by('trip', 'order')
         if len(q_res):
-            trips = defaultdict(list)
-            for step in q_res:
-                trips[step.trip_id].append(step)
-            for step_list in trips.values():
+            for step_list in Trip.group_by_trip(q_res):
                 success = True
                 if len(step_list) == 1:
                     if step_list[0].origin != origin or step_list[0].destination != destination:
@@ -192,11 +188,20 @@ class UserProfileView(TemplateView):
         context = super().get_context_data(**kwargs)
         if int(kwargs['user_id']) == self.request.user.pk:
             usr = self.request.user
-            context['driving_license_form'] = DrivingLicenseForm()
+            context['driving_license_form'] = DrivingLicenseForm(instance=self.request.user.poolinguser)
+            trip_list = Step.objects.filter(passengers__id__exact=usr.pk)
         else:
             usr = get_object_or_404(User, pk=kwargs['user_id'])
-        if usr.poolinguser.is_driver():
-            # TODO: get list of trips
-            pass
+            if not usr.poolinguser.is_driver():
+                raise PermissionDenied
+            else:
+                trip_list = Step.objects.filter(trip__driver=usr.poolinguser.pk)
         context['viewed_user'] = usr
+        context['trip_list'] = list(Trip.group_by_trip(trip_list.select_related('trip').order_by('trip')))
         return context
+
+    def post(self, request, user_id):
+        license_form = DrivingLicenseForm(self.request.POST, instance=self.request.user.poolinguser)
+        if license_form.is_valid():
+            license_form.save()
+        return redirect('planner:homepage')

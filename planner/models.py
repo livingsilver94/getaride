@@ -1,4 +1,5 @@
 import datetime
+from itertools import groupby
 
 from cities_light.models import City
 from cities_light.models import City
@@ -37,6 +38,11 @@ class Trip(models.Model):
             except_dict.update({'date_origin': _("Departure date must be one day later than current date")})
         if except_dict:
             raise valids.ValidationError(except_dict)
+
+    @staticmethod
+    def group_by_trip(step_list):
+        for key, group in groupby(step_list, lambda step: step.trip.pk):
+            yield list(group)
 
 
 class StepManager(models.Manager):
