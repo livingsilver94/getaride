@@ -41,6 +41,12 @@ class Trip(models.Model):
 
     @staticmethod
     def group_by_trip(step_list):
+        """
+        Group a list of Steps. Every group is a list of Steps belonging to the same Trip
+
+        :param step_list: An ordered (by Trip ID) list of Steps
+        :return: Iterator. Every call returns a list of Step belonging to the same Trip
+        """
         for key, group in groupby(step_list, lambda step: step.trip.pk):
             yield list(group)
 
@@ -79,6 +85,15 @@ class Step(models.Model):
 
     @staticmethod
     def get_valid_interval_minutes(datetm, range_minutes):
+        """
+        Get time_min and time_max based on a given datetime and a range in minutes. If time+range or time-range overflow
+        to the previous or the next day, time_min and time_max will be midnight or 23:59, respectively.
+
+        :param datetime.datetime datetm: A considered datetime
+        :param int range_minutes: minutes to add and subtract to datetm
+        :return: time_min and time_max
+        :rtype: tuple
+        """
         range_minutes = datetime.timedelta(minutes=range_minutes)
         time_min = datetm - range_minutes
         if time_min.date() < datetm.date():
