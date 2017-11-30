@@ -1,19 +1,17 @@
 {% extends "planner/elements/base_page.html" %}
 {% load static %}
 {% block head %}
-    <script src="https://cdn.rawgit.com/elo80ka/django-dynamic-formset/v1.2.2/src/jquery.formset.js"></script>
+    <script src="https://cdn.rawgit.com/elo80ka/django-dynamic-formset/f57c8ca4/src/jquery.formset.js"></script>
     <script src="{% static 'planner/js/new_step_form.js' %}"></script>
     {{ formset.media }}
 {% endblock %}
 {% block content %}
     <form action="{% url 'planner:trip-create' %}" method="post">
         {% csrf_token %}
-        {{ form.errors }}
         {{ form.as_p }}
         {{ formset.management_form }}
         {% for form_loop in formset %}
             <div class="inline {{ formset.prefix }}">
-                {{ form_loop.errors }}
                 {{ form_loop.as_p }}
             </div>
         {% endfor %}
