@@ -170,7 +170,7 @@ class NewTripView(CreateView):
             messages.error(self.request, _('An error occured while saving the trip'))
             return redirect(self.request.META['HTTP_REFERER'])
         else:
-            messages.success(self.request, _('New trip save successfully'))
+            messages.success(self.request, _('New trip saved successfully'))
             return redirect(settings.LOGIN_REDIRECT_URL)
 
     def form_invalid(self, form, formset):
