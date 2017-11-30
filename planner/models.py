@@ -50,6 +50,30 @@ class Trip(models.Model):
         for key, group in groupby(step_list, lambda step: step.trip.pk):
             yield list(group)
 
+    @staticmethod
+    def filter_consecutive_steps(step_list, origin, destination):
+        """
+        Returns a list of Step representing a Trip if Steps are consecutive, i.e. there are no "holes" for origin to
+        destination. If a Trip does not match these conditions, then it's dropped.
+
+        :param step_list: Ordered (by Trip ID and order) list of Steps
+        :param origin: City of origin
+        :param destination: City of destination
+        :return: Iterator. Every call returns a list of Step belonging to the same Trip
+        """
+        for step_list in Trip.group_by_trip(step_list):
+            success = True
+            if len(step_list) == 1:
+                if step_list[0].origin != origin or step_list[0].destination != destination:
+                    success = False
+            else:
+                for step, prev_step in zip(step_list[1:], step_list):
+                    if step.order != prev_step.order + 1:
+                        success = False
+                        break
+            if success:
+                yield step_list
+
 
 class StepManager(models.Manager):
     join_limit = datetime.timedelta(days=1)

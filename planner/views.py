@@ -44,19 +44,7 @@ class SearchTripView(ListView):
         q_res = Step.free.filter(
             Q(destination=destination) | Q(origin=origin, hour_origin__range=(time_min, time_max)),
             trip__date_origin=datetm.date()).order_by('trip', 'order')
-        if len(q_res):
-            for step_list in Trip.group_by_trip(q_res):
-                success = True
-                if len(step_list) == 1:
-                    if step_list[0].origin != origin or step_list[0].destination != destination:
-                        success = False
-                else:
-                    for step, prev_step in zip(step_list[1:], step_list):
-                        if step.order != prev_step.order + 1:
-                            success = False
-                            break
-                if success:
-                    yield step_list
+        return Trip.filter_consecutive_steps(q_res, origin, destination)
 
 
 class JoinTripView(View):
