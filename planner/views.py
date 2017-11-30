@@ -64,7 +64,7 @@ class JoinTripView(View):
         step_min, step_max = request.POST['step_min'], request.POST['step_max']
         try:
             raw_steps = Step.free.filter(trip=trip_id, order__range=(step_min, step_max)).annotate(
-                    trip__max_num_passengers=F('trip__max_num_passengers')).annotate(Count('passengers'))
+                trip__max_num_passengers=F('trip__max_num_passengers')).annotate(Count('passengers'))
             steps = list(Trip.filter_consecutive_steps(raw_steps))[0]
             with transaction.atomic():
                 for step in steps:
@@ -155,16 +155,23 @@ class NewTripView(CreateView):
         :param formset: Step formset
         :return: an HttpResponse to success url
         """
-        self.object = form.save(commit=False)
-        self.object.driver = self.request.user.poolinguser
-        self.object.save()
+        try:
+            with transaction.atomic():
+                self.object = form.save(commit=False)
+                self.object.driver = self.request.user.poolinguser
+                self.object.save()
 
-        steps = formset.save(commit=False)
-        for index, step in enumerate(steps):
-            step.trip = self.object
-            step.order = index
-            step.save()
-        return redirect(settings.LOGIN_REDIRECT_URL)
+                steps = formset.save(commit=False)
+                for index, step in enumerate(steps):
+                    step.trip = self.object
+                    step.order = index
+                    step.save()
+        except IntegrityError:
+            messages.error(self.request, _('An error occured while saving the trip'))
+            return redirect(self.request.META['HTTP_REFERER'])
+        else:
+            messages.success(self.request, _('New trip save successfully'))
+            return redirect(settings.LOGIN_REDIRECT_URL)
 
     def form_invalid(self, form, formset):
         """
