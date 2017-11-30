@@ -11,8 +11,8 @@
         {% with trip|last as last %}
             {{ last.destination.name }}
         {% endwith %}
-        </span>
-        <span>{{ step.0.trip.date_origin }}</span>
+        </span><br>
+        <span>{{ trip.0.trip.date_origin }}</span>
     {% endfor %}
     </div>
     {% if driving_license_form %}
