@@ -51,7 +51,7 @@ class Trip(models.Model):
             yield list(group)
 
     @staticmethod
-    def filter_consecutive_steps(step_list, origin, destination):
+    def filter_consecutive_steps(step_list, origin=None, destination=None):
         """
         Returns a list of Step representing a Trip if Steps are consecutive, i.e. there are no "holes" for origin to
         destination. If a Trip does not match these conditions, then it's dropped.

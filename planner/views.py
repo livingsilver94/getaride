@@ -12,7 +12,7 @@ from django.views.generic import TemplateView, View, CreateView, ListView
 from users.models import User
 
 from getaride import settings
-from planner.exceptions import StepIsFullException
+from django.db import IntegrityError
 from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet, DrivingLicenseForm
 from planner.models import Trip, Step
 
@@ -44,7 +44,7 @@ class SearchTripView(ListView):
         q_res = Step.free.filter(
             Q(destination=destination) | Q(origin=origin, hour_origin__range=(time_min, time_max)),
             trip__date_origin=datetm.date()).order_by('trip', 'order')
-        return Trip.filter_consecutive_steps(q_res, origin, destination)
+        return Trip.filter_consecutive_steps(q_res, origin=origin, destination=destination)
 
 
 class JoinTripView(View):
@@ -63,14 +63,18 @@ class JoinTripView(View):
         """
         step_min, step_max = request.POST['step_min'], request.POST['step_max']
         try:
-            with transaction.atomic():
-                steps = Step.free.filter(trip=trip_id, order__range=(step_min, step_max)).annotate(
+            raw_steps = Step.free.filter(trip=trip_id, order__range=(step_min, step_max)).annotate(
                     trip__max_num_passengers=F('trip__max_num_passengers')).annotate(Count('passengers'))
+            steps = list(Trip.filter_consecutive_steps(raw_steps))[0]
+            with transaction.atomic():
                 for step in steps:
                     step.passengers.add(self.request.user.poolinguser)
-        except StepIsFullException:
-            # TODO: implement error messages to pass to the redirected page. As for now, it's not priority.
-            redirect('planner:searh-trip')
+        # We have two possibilities here: either a Step reached the max num of passengers
+        # or in the meantime origin time got nearer than 24h
+        except (IntegrityError, IndexError):
+            messages.error(request, _('The chosen Trip is not available anymore'))
+            # return to the previous page
+            return redirect(request.META['HTTP_REFERER'])
         else:
             return redirect('planner:homepage')
 
