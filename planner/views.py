@@ -1,11 +1,13 @@
 import datetime
 
 from cities_light.models import City
+from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models import Q, Count, F
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic import TemplateView, View, CreateView, ListView
 from users.models import User
 
@@ -111,7 +113,8 @@ class SignupView(View):
             profile = profile_form.save(commit=False)
             profile.base_user_id = user.pk
             profile.save()
-            return redirect(settings.LOGIN_REDIRECT_URL)
+            messages.success(request, message=_('User successfully created. Now login!'))
+            return redirect('planner:homepage')
         else:
             return render(request, self.template_name, context={
                 self.user_form_prefix: user_form,
