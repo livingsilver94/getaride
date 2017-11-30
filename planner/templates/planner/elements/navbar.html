@@ -8,7 +8,7 @@
         </div>
         <ul class="nav navbar-nav navbar-right">
             {% if not user.is_authenticated %}
-                <li><a href="{% url 'planner:signup' %}">Sign up</a></li>
+                <li><a href="{% url 'planner:user-signup' %}">Sign up</a></li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" href="#" data-toggle="dropdown">
                         <span class="glyphicon glyphicon-log-in"></span> Login</a>
@@ -18,15 +18,16 @@
                 </li>
             {% else %}
                 <li class="dropdown">
+
                 <a class="dropdown-toggle" href="#" role="menu"
-                   data-toggle="dropdown">{{ user.first_name }} {{ user.last_name }}</a>
+                   data-toggle="dropdown"><span class="glyphicon glyphicon-record"  aria-hidden="true"></span><span style="padding-left: 5px;">{{ user.first_name }} {{ user.last_name }}</span></a>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Settings</a></li>
+                    <li><a href="{% url 'planner:user-profile' user_id=user.poolinguser.id %}">Settings</a></li>
                     {% if user.poolinguser.is_driver %}
-                        <li><a href="{% url 'planner:new-trip' %}">Register a trip</a></li>
+                        <li><a href="{% url 'planner:trip-create' %}">Register a trip</a></li>
                     {% endif %}
                     <li class="divider"></li>
-                    <li><a href="{% url 'planner:logout' %}">Logout</a></li>
+                    <li><a href="{% url 'planner:user-logout' %}">Logout</a></li>
                 </ul>
             {% endif %}
         </ul>

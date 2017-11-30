@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sessions',
     'planner.apps.PlannerConfig',
+    'bootstrap3',
     'cities_light',
     'leaflet',
     'users',
@@ -108,21 +109,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-DATE_INPUT_FORMATS = (
-    '%d.%m.%Y', '%d.%m.%Y', '%d.%m.%y',  # '25.10.2006', '25.10.2006', '25.10.06'
-    '%d-%m-%Y', '%d/%m/%Y', '%d/%m/%y',  # '25-10-2006', '25/10/2006', '25/10/06'
-    '%d %b %Y',  # '25 Oct 2006',
-    '%d %B %Y',  # '25 October 2006',
-)
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
 
-CITIES_LIGHT_TRANSLATION_LANGUAGES = [LANGUAGE_CODE]
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ['it']
 
-CITIES_LIGHT_INCLUDE_COUNTRIES = [LANGUAGE_CODE.upper()]
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['IT']
 
 CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPLA', 'PPLA2', 'PPLA3']
 

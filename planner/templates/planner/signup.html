@@ -1,15 +1,16 @@
-<!DOCTYPE html>
-<html lang="it">
+{% extends "planner/elements/base_page.html" %}
 <head>
     <title>Sign up</title>
     {% include 'planner/elements/base_head.html' %}
+    {% block head %}{% endblock %}
 </head>
-<body>
-<form method="post" action="{% url 'planner:signup' %}">
-    {% csrf_token %}
-    {{ user_signup.as_p }}
-    {{ profile_signup.as_p }}
-    <button>Sign up</button>
-</form>
-</body>
-</html>
+{% block content %}
+    <div class="sign-form">
+        <form method="post" action="{% url 'planner:user-signup' %}">
+            {% csrf_token %}
+            {{ user_signup.as_p }}
+            {{ profile_signup.as_p }}
+            <button class="btn btn-success">Sign up</button>
+        </form>
+    </div>
+{% endblock %}

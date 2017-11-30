@@ -1,21 +1,24 @@
 import datetime
-from collections import defaultdict
 
 from cities_light.models import City
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models import Q, Count, F
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import TemplateView, View, CreateView, ListView
+from users.models import User
 
 from getaride import settings
 from planner.exceptions import StepIsFullException
-from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet
+from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet, DrivingLicenseForm
 from planner.models import Trip, Step
 
 
 class HomePageView(TemplateView):
+    """
+    Homepage view.
+    """
     template_name = 'planner/homepage.html'
 
     def get_context_data(self, **kwargs):
@@ -26,6 +29,9 @@ class HomePageView(TemplateView):
 
 
 class SearchTripView(ListView):
+    """
+    View to display results of a trip search.
+    """
     template_name = 'planner/searchtrip.html'
 
     def get_queryset(self):
@@ -37,10 +43,7 @@ class SearchTripView(ListView):
             Q(destination=destination) | Q(origin=origin, hour_origin__range=(time_min, time_max)),
             trip__date_origin=datetm.date()).order_by('trip', 'order')
         if len(q_res):
-            trips = defaultdict(list)
-            for step in q_res:
-                trips[step.trip_id].append(step)
-            for step_list in trips.values():
+            for step_list in Trip.group_by_trip(q_res):
                 success = True
                 if len(step_list) == 1:
                     if step_list[0].origin != origin or step_list[0].destination != destination:
@@ -55,7 +58,19 @@ class SearchTripView(ListView):
 
 
 class JoinTripView(View):
+    """
+    View to join a Trip based on its id, and the minimum and maximum Step order. It's only callable via a POST request.
+    It's also meant to be atomic.
+    """
+
     def post(self, request, trip_id):
+        """
+        Add the logged-in user to the specified Steps, identified by trip_id and minimum and maximum Step order.
+        Minimum and maximum order are passed through ``request.POST`` dict.
+
+        :param request: Classic Django request
+        :param trip_id: ID of the Trip the Steps belong to
+        """
         step_min, step_max = request.POST['step_min'], request.POST['step_max']
         try:
             with transaction.atomic():
@@ -74,7 +89,7 @@ class SignupView(View):
     """
     This class will create a new user with its associated profile if requested via POST, or it will show a sign up
     form if GET.
-    This class will use get() or post() depending on the http request.The method that will "decide" what to do
+    This class will use ``get()`` or ``post()`` depending on the HTTP request.The method that will "decide" what to do
     is dispatch(), that has not been overridden.
     """
     user_form_prefix = 'user_signup'
@@ -94,7 +109,7 @@ class SignupView(View):
         if all((user_form.is_valid(), profile_form.is_valid())):
             user = user_form.save()
             profile = profile_form.save(commit=False)
-            profile.base_user_id = user.id
+            profile.base_user_id = user.pk
             profile.save()
             return redirect(settings.LOGIN_REDIRECT_URL)
         else:
@@ -106,6 +121,10 @@ class SignupView(View):
 
 # CREDITS: http://www.mustafa-s.com/blog/django_cbv_inlineformset_and_bootstrap3/
 class NewTripView(CreateView):
+    """
+    View to add a Trip. It's only accessible to drivers, otherwise it'll return a 403 error.
+    Like other CreateView, it's callable either via a GET or a POST request.
+    """
     template_name = 'planner/newtrip_page.html'
     model = Trip
     form_class = TripForm
@@ -121,10 +140,7 @@ class NewTripView(CreateView):
             form = self.get_form(self.get_form_class())
             step_formset = StepFormSet()
             return self.render_to_response(
-                self.get_context_data(form=form,
-                                      formset=step_formset,
-                                      )
-            )
+                self.get_context_data(form=form, formset=step_formset, ))
         raise PermissionDenied
 
     def post(self, request, *args, **kwargs):
@@ -138,12 +154,11 @@ class NewTripView(CreateView):
     def form_valid(self, form, formset):
         """
         Called if all forms are valid. Creates Trip instance along with the
-        associated Step instances then redirects to success url
-        Args:
-            form: Trip form
-            formset: Step formset
+        associated Step instances then redirects to success url.
 
-        Returns: an HttpResponse to success url
+        :param form: Trip form
+        :param formset: Step formset
+        :return: an HttpResponse to success url
         """
         self.object = form.save(commit=False)
         self.object.driver = self.request.user.poolinguser
@@ -158,30 +173,75 @@ class NewTripView(CreateView):
 
     def form_invalid(self, form, formset):
         """
-        Called if a form is invalid. Re-renders the context data with the
-        data-filled forms and errors.
+        Called if a form is invalid. Re-renders the context data with the data-filled forms and errors.
 
-        Args:
-            form: Trip form
-            formset: Step formset
+       :param form: Trip form
+       :param formset: Step formset
         """
         return self.render_to_response(
             self.get_context_data(form=form, formset=formset))
 
 
 def city_autocomplete(request):
+    """
+    Method-based view to return a JSON object containing an array of up to ten cities.
+
+    :param request: ajax request
+    :return: a JSON containing city info
+    :rtype: JsonResponse
+    """
     if request.is_ajax():
-        cities = City.objects.filter(name__istartswith=request.GET.get('term'))[:10]
+        cities = City.objects.filter(name__istartswith=request.GET.get('term')).select_related('region')[:10]
         results = []
         for city in cities:
-            show_string = '%s, %s' % (city.name, city.region.name)
-            city_json = {'id': city.id, 'label': show_string, 'value': show_string}
+            show_string = '{}, {}'.format(city.name, city.region.name)
+            city_json = {'id': city.pk, 'label': show_string, 'value': show_string}
             results.append(city_json)
         return JsonResponse(results, safe=False)
 
 
 def city_coordinates(request):
+    """
+    Method-based view to return a JSON object containing name, latitude and longitude of a specified city.
+
+    :param request: ajax request
+    :return: a JSON containing city name, lat and lon
+    :rtype: JsonResponse
+    """
     if request.is_ajax():
         city = City.objects.get(pk=request.GET.get('city_id'))
-        coords = {'name': city.name, 'lat': city.latitude, 'lon': city.longitude}
-        return JsonResponse(coords)
+        return JsonResponse({'name': city.name, 'lat': city.latitude, 'lon': city.longitude})
+
+
+class UserProfileView(TemplateView):
+    """
+    View to show a user's profile.
+
+    **Viewing the logged-in user**: it'll show every joined trip in time and a form to add/change driving license code.
+
+    **Viewing another user's profile**: assuming the specified user exists (otherwise 404), it'll show every trip
+    in which the user is/was a driver. Else, 403.
+    """
+    template_name = 'planner/userprofile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if int(kwargs['user_id']) == self.request.user.pk:
+            usr = self.request.user
+            context['driving_license_form'] = DrivingLicenseForm(instance=self.request.user.poolinguser)
+            trip_list = Step.objects.filter(passengers__id__exact=usr.poolinguser.pk)
+        else:
+            usr = get_object_or_404(User, pk=kwargs['user_id'])
+            if not usr.poolinguser.is_driver():
+                raise PermissionDenied
+            else:
+                trip_list = Step.objects.filter(trip__driver=usr.poolinguser.pk)
+        context['viewed_user'] = usr
+        context['trip_list'] = list(Trip.group_by_trip(trip_list.select_related('trip').order_by('trip')))
+        return context
+
+    def post(self, request, user_id):
+        license_form = DrivingLicenseForm(self.request.POST, instance=self.request.user.poolinguser)
+        if license_form.is_valid():
+            license_form.save()
+        return redirect('planner:homepage')

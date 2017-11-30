@@ -1,0 +1,25 @@
+{% extends "planner/elements/base_page.html" %}
+{% block head %}{% endblock %}
+{% block content %}
+    <span>{{ viewed_user.first_name }} {{ viewed_user.last_name }}</span>
+    <div>
+    <span>
+    {% for trip in trip_list %}
+        {% for step in trip %}
+            {{ step.origin.name|add:" -> " }}
+        {% endfor %}
+        {% with trip|last as last %}
+            {{ last.destination.name }}
+        {% endwith %}
+        </span><br>
+        <span>{{ trip.0.trip.date_origin }}</span>
+    {% endfor %}
+    </div>
+    {% if driving_license_form %}
+        <form method="post" action="{% url 'planner:user-profile' user_id=user.pk %}">
+            {% csrf_token %}
+            {{ driving_license_form.as_p }}
+            <input type="submit"/>
+        </form>
+    {% endif %}
+{% endblock %}

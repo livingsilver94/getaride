@@ -17,3 +17,27 @@
 .ui-autocomplete {
     z-index: 100 !important;
 }
+
+.footer {
+    color: aquamarine;
+}
+
+#map{
+    border: 1px solid #ccc;
+}
+
+.sign-form{
+    height: 50%;
+    margin-left:10px;
+
+}
+
+.glyphicon.glyphicon-record{
+    color: palegreen;
+
+}
+
+#datetimepicker{
+    padding-top: 20px;
+}
+

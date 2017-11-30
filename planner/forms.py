@@ -75,3 +75,9 @@ class UserForm(UserCreationForm):
         for field_name in self.Meta.fields:
             self[field_name].field.required = True
         self['password1'].field.validators = [MinLengthValidator(6)]
+
+
+class DrivingLicenseForm(forms.ModelForm):
+    class Meta:
+        model = PoolingUser
+        fields = ['driving_license']
