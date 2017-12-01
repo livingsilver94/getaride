@@ -167,7 +167,7 @@ class NewTripView(CreateView):
                     step.order = index
                     step.save()
         except IntegrityError:
-            messages.error(self.request, _('An error occured while saving the trip'))
+            messages.error(self.request, _('An error occurred while saving the trip'))
             return redirect(self.request.META['HTTP_REFERER'])
         else:
             messages.success(self.request, _('New trip saved successfully'))
@@ -246,4 +246,5 @@ class UserProfileView(TemplateView):
         license_form = DrivingLicenseForm(self.request.POST, instance=self.request.user.poolinguser)
         if license_form.is_valid():
             license_form.save()
+            messages.success(request, _('Driving license code successfully added/changed'))
         return redirect('planner:homepage')
