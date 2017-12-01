@@ -6,14 +6,12 @@
 {% block head %}
     {% leaflet_css %}
     {% leaflet_js %}
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
     {% leaflet_map "map" creatediv=False %}
     <script src="{% static 'planner/js/get_map_var.js' %}"></script>
     <script src="https://cdn.rawgit.com/moment/moment/2.19.1/min/moment.min.js"></script>
     <script src="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.17.45/build/js/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript" src="{% static 'planner/js/leaflet-routing-machine.js' %}"></script>
-    <link rel="stylesheet"
-          href="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.17.45/build/css/bootstrap-datetimepicker.min.css"
-          type="text/css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.17.45/build/css/bootstrap-datetimepicker.min.css" type="text/css">
 {% endblock %}
 {% block content %}
     <main class="container">
