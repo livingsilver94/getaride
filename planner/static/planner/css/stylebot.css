@@ -20,24 +20,34 @@
 
 .footer {
     color: aquamarine;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
 
-#map{
+#map {
     border: 1px solid #ccc;
 }
 
-.sign-form{
+.sign-form {
     height: 50%;
-    margin-left:10px;
+    margin-left: 10px;
 
 }
 
-.glyphicon.glyphicon-record{
+.glyphicon.glyphicon-record {
     color: palegreen;
 
 }
 
-#datetimepicker{
+.glyphicon.glyphicon-log-in {
+    color: limegreen;
+}
+
+#datetimepicker {
     padding-top: 20px;
 }
+
+
 
