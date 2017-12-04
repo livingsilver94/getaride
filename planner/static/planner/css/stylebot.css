@@ -16,6 +16,9 @@ h2{
     color: #666666;
 }
 
+.nav.navbar-nav.navbar-right{
+    color: #666666;
+}
 .dropdown-form {
     height: 300%;
     width: 400%;
@@ -35,6 +38,7 @@ h2{
 
 #map {
     border: 1px solid #ccc;
+    top: 22px;
 }
 
 .sign-form {
