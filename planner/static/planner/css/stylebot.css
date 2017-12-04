@@ -28,13 +28,7 @@ h2{
     z-index: 100 !important;
 }
 
-.footer {
-    color: aquamarine;
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-}
+
 
 #map {
     border: 1px solid #ccc;
@@ -60,6 +54,17 @@ h2{
     padding-top: 20px;
 }
 
-.footer{
+footer{
+    position: absolute;
     background: linear-gradient(to right, #6bc49b , palegreen );
+    color: aquamarine;
+    bottom: -20px;
+    width: 1347px;
+}
+
+p{
+    padding: 0px;
+    margin: 0px;
+    width: 120px;
+    margin: 0px;
 }
