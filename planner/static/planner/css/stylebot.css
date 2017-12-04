@@ -68,3 +68,9 @@ p{
     width: 120px;
     margin: 0;
 }
+
+.btn-default{
+    background: palegreen;
+    width: -webkit-fill-available;
+}
+
