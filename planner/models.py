@@ -61,10 +61,14 @@ class Trip(models.Model):
         :param destination: City of destination
         :return: Iterator. Every call returns a list of Step belonging to the same Trip
         """
+        orig = origin.pk if issubclass(origin.__class__, Step) else origin
+        dest = destination.pk if issubclass(destination.__class__, Step) else destination
         for step_list in Trip.group_by_trip(step_list):
             success = True
             if len(step_list) == 1:
-                if step_list[0].origin != origin or step_list[0].destination != destination:
+                if origin is None or destination is None:
+                    pass
+                elif step_list[0].origin.pk != int(origin) or step_list[0].destination.pk != int(destination):
                     success = False
             else:
                 for step, prev_step in zip(step_list[1:], step_list):
