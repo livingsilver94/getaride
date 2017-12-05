@@ -66,9 +66,9 @@ class Trip(models.Model):
         for step_list in Trip.group_by_trip(step_list):
             success = True
             if len(step_list) == 1:
-                if origin is None or destination is None:
+                if orig is None or dest is None:
                     pass
-                elif step_list[0].origin.pk != int(origin) or step_list[0].destination.pk != int(destination):
+                elif step_list[0].origin.pk != int(orig) or step_list[0].destination.pk != int(dest):
                     success = False
             else:
                 for step, prev_step in zip(step_list[1:], step_list):
