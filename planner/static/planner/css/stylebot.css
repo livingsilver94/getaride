@@ -54,6 +54,24 @@ footer {
     color: aquamarine;
     bottom: -50px;
     width: 1347px;
+    height: 40px ;
+}
+
+#loginform-submit{
+    width: 316px;
+    margin-top: 4px;
+    padding: 4px;
+    background: linear-gradient(to right, #6bc49b, palegreen);
+    border: #6bc49b;
+    border-radius: 4px;
+}
+
+#logname{
+    padding:2px;
+}
+
+#logpass{
+    padding:2px;
 }
 
 p {
@@ -77,10 +95,10 @@ form.signform-form input {
 #signform-submit {
     margin-left: 25%;
     margin-top: 20px;
+    background: linear-gradient(to right, #6bc49b, palegreen);
+    border: #6bc49b;
+    border-radius: 4px;
 }
 
-.btn-default {
-    background: palegreen;
-    width: -webkit-fill-available;
-}
+
 
