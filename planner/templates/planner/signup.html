@@ -5,12 +5,12 @@
     {% block head %}{% endblock %}
 </head>
 {% block content %}
-    <div class="sign-form">
-        <form method="post" action="{% url 'planner:user-signup' %}">
+    <div class="centered-container" style="height: 40%; padding: 8px;">
+        <form class="signform-form" method="post" action="{% url 'planner:user-signup' %}">
             {% csrf_token %}
             {{ user_signup.as_p }}
             {{ profile_signup.as_p }}
-            <button class="btn btn-success">Sign up</button>
+            <button id="signform-submit" class="btn btn-success">Sign up</button>
         </form>
     </div>
 {% endblock %}

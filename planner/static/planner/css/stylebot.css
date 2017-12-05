@@ -9,16 +9,18 @@
     padding: 0;
 }
 
-.container-fluid{
+.container-fluid {
     background-color: white;
 }
-h2{
+
+h2 {
     color: #666666;
 }
 
-.nav.navbar-nav.navbar-right{
+.nav.navbar-nav.navbar-right {
     color: #666666;
 }
+
 .dropdown-form {
     height: 300%;
     width: 400%;
@@ -28,17 +30,9 @@ h2{
     z-index: 100 !important;
 }
 
-
-
 #map {
     border: 1px solid #ccc;
     top: 22px;
-}
-
-.sign-form {
-    height: 50%;
-    margin-left: 10px;
-
 }
 
 .glyphicon.glyphicon-record {
@@ -54,22 +48,38 @@ h2{
     padding-top: 20px;
 }
 
-footer{
+footer {
     position: absolute;
-    background: linear-gradient(to right, #6bc49b , palegreen );
+    background: linear-gradient(to right, #6bc49b, palegreen);
     color: aquamarine;
-    bottom: -20px;
+    bottom: -50px;
     width: 1347px;
 }
 
-p{
-    padding: 0;
-    margin: 0;
-    width: 120px;
-    margin: 0;
+p {
+    padding: 4px;
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 60%;
+    color: #666666;
+
 }
 
-.btn-default{
+.centered-container {
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+form.signform-form input {
+    width: 384px;
+}
+
+#signform-submit {
+    margin-left: 25%;
+    margin-top: 20px;
+}
+
+.btn-default {
     background: palegreen;
     width: -webkit-fill-available;
 }
