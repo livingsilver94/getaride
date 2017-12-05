@@ -17,6 +17,26 @@ h2 {
     color: #666666;
 }
 
+h3 {
+    color: #666666;
+    font-size: 22px;
+}
+
+#newtrip-submit {
+    background: linear-gradient(to right, #6bc49b, palegreen);
+    border: #6bc49b;
+    border-radius: 4px;
+    padding: 6px;
+    width: 80px;
+    margin-left: 15px;
+
+}
+
+.homepage-newtrip {
+    width: 450px;
+    display: inline-block;
+}
+
 .nav.navbar-nav.navbar-right {
     color: #666666;
 }
@@ -53,11 +73,11 @@ footer {
     background: linear-gradient(to right, #6bc49b, palegreen);
     color: aquamarine;
     bottom: -100px;
-    width: 1347px;
+    width: 1400px;
     height: fit-content;
 }
 
-#loginform-submit{
+#loginform-submit {
     width: 316px;
     margin-top: 4px;
     padding: 4px;
@@ -66,12 +86,12 @@ footer {
     border-radius: 4px;
 }
 
-#logname{
-    padding:2px;
+#logname {
+    padding: 2px;
 }
 
-#logpass{
-    padding:2px;
+#logpass {
+    padding: 2px;
 }
 
 p {
@@ -92,6 +112,10 @@ form.signform-form input {
     width: 384px;
 }
 
+div.input-group input {
+    width: 201px;
+}
+
 #signform-submit {
     margin-left: 25%;
     margin-top: 12px;
@@ -101,20 +125,29 @@ form.signform-form input {
     width: 89px;
 }
 
-#icon-user{
-    margin-left: 41%;
-    padding-right:35px;
-    color: mediumseagreen;
-    opacity: 0.8;
+#serchtrip-submit {
+    background: linear-gradient(to right, #6bc49b, palegreen);
+    border: #6bc49b;
+    border-radius: 4px;
+    margin-top: 10px;
+    padding: 6px;
+    width: 65px;
 }
 
-#icon-envelope{
+#icon-user {
+    margin-left: 41%;
     padding-right: 35px;
     color: mediumseagreen;
     opacity: 0.8;
 }
 
-#icon-comments{
+#icon-envelope {
+    padding-right: 35px;
+    color: mediumseagreen;
+    opacity: 0.8;
+}
+
+#icon-comments {
     color: mediumseagreen;
     opacity: 0.8;
 }
