@@ -69,11 +69,11 @@ h3 {
 }
 
 footer {
-    position: absolute;
+    clear: both;
+    position: relative;
     background: linear-gradient(to right, #6bc49b, palegreen);
     color: aquamarine;
-    bottom: -100px;
-    width: 1400px;
+    width: 100%;
     height: fit-content;
 }
 
@@ -150,4 +150,27 @@ div.input-group input {
 #icon-comments {
     color: mediumseagreen;
     opacity: 0.8;
+}
+
+.newtrip-form {
+    margin-left: 15%;
+    padding: 0;
+    display: inline-block;
+}
+
+form.newtrip-form input {
+    width: 300px;
+}
+
+#newtrip-div {
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+#newtrip-button {
+    background: linear-gradient(to right, #6bc49b, palegreen);
+    border: #6bc49b;
+    border-radius: 4px;
+    padding: 6px;
+    width: 80px;
 }
