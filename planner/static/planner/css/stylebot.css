@@ -52,9 +52,9 @@ footer {
     position: absolute;
     background: linear-gradient(to right, #6bc49b, palegreen);
     color: aquamarine;
-    bottom: -50px;
+    bottom: -100px;
     width: 1347px;
-    height: 40px ;
+    height: fit-content;
 }
 
 #loginform-submit{
@@ -94,11 +94,27 @@ form.signform-form input {
 
 #signform-submit {
     margin-left: 25%;
-    margin-top: 20px;
+    margin-top: 12px;
     background: linear-gradient(to right, #6bc49b, palegreen);
     border: #6bc49b;
     border-radius: 4px;
+    width: 89px;
 }
 
+#icon-user{
+    margin-left: 41%;
+    padding-right:35px;
+    color: mediumseagreen;
+    opacity: 0.8;
+}
 
+#icon-envelope{
+    padding-right: 35px;
+    color: mediumseagreen;
+    opacity: 0.8;
+}
 
+#icon-comments{
+    color: mediumseagreen;
+    opacity: 0.8;
+}
