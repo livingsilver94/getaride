@@ -18,4 +18,5 @@ urlpatterns = [
     url(r'^trip/(?P<trip_id>[0-9]+)/join/$', login_required(plannerviews.JoinTripView.as_view()), name='trip-join'),
     url(r'^city-autocomplete/$', plannerviews.city_autocomplete, name="city-autocomplete"),
     url(r'^city-coordinates/$', plannerviews.city_coordinates, name='city-coordinates'),
+    url(r'^contact-us/$', plannerviews.contact_us , name='contact_us'),
 ]
