@@ -29,6 +29,7 @@ h3 {
     padding: 5px;
     width: 80px;
     margin-left: 15px;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
 
 }
 
@@ -85,6 +86,9 @@ footer {
     background: linear-gradient(to right, #6bc49b, palegreen);
     border: #6bc49b;
     border-radius: 4px;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+
+
 }
 
 #logname {
@@ -133,6 +137,7 @@ div.input-group input {
     margin-top: 10px;
     padding: 6px;
     width: 65px;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
 }
 
 #icon-user {
@@ -174,6 +179,7 @@ form.newtrip-form input {
     border-radius: 4px;
     padding: 6px;
     width: 80px;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
 }
 
 #newtrip-loop{
@@ -184,11 +190,13 @@ form.newtrip-form input {
 .step-delete{
     background: mediumseagreen;
     opacity: 0.8;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
 }
 
 .step-add{
      background: mediumseagreen;
     opacity: 0.8;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
 }
 
 .step-delete:hover, .step-add:hover {
