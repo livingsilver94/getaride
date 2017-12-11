@@ -11,11 +11,12 @@
         {% csrf_token %}
         {{ form.as_p }}
         {{ formset.management_form }}
-        {% for form_loop in formset %}
+       <div id="newtrip-loop"> {% for form_loop in formset %}
             <div class="inline {{ formset.prefix }}">
                 {{ form_loop.as_p }}
             </div>
         {% endfor %}
+       </div>
         <button id="newtrip-button" class="btn-success" type="submit">Submit</button>
     </form>
     </div>
