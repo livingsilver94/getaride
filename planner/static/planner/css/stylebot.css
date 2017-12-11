@@ -70,7 +70,8 @@ h3 {
 
 footer {
     clear: both;
-    position: relative;
+    position: absolute;
+    bottom: 0;
     background: linear-gradient(to right, #6bc49b, palegreen);
     color: aquamarine;
     width: 100%;
@@ -173,4 +174,25 @@ form.newtrip-form input {
     border-radius: 4px;
     padding: 6px;
     width: 80px;
+}
+
+#newtrip-loop{
+    background: linear-gradient(to right, #6bc49b00, palegreen);
+    border-radius: 10px;
+}
+
+.step-delete{
+    background: mediumseagreen;
+    opacity: 0.8;
+}
+
+.step-add{
+     background: mediumseagreen;
+    opacity: 0.8;
+}
+
+.step-delete:hover, .step-add:hover {
+    background: mediumseagreen;
+    opacity: 1;
+
 }
