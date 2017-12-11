@@ -13,7 +13,7 @@ $(function () {
         stepping: 10,
         minDate: moment().add(1, 'days').valueOf(),
         useCurrent: true,
-    }).on("changeDate", function (event) {
+    }).on("dp.change", function (event) {
         document.getElementById("searchtrip_datetime").value = $('#datetimepicker').data('DateTimePicker').date().unix();
     }).trigger("changeDate").show();
 });
