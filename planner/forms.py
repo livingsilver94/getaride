@@ -62,8 +62,22 @@ class StepForm(forms.ModelForm):
         }
 
 
-StepFormSet = inlineformset_factory(parent_model=Trip, model=Step, form=StepForm, can_delete=False, min_num=1, extra=0,
-                                    validate_min=1)
+class StepFormSet(inlineformset_factory(parent_model=Trip, model=Step, form=StepForm, can_delete=False, min_num=1, extra=0,
+                                    validate_min=1)):
+
+    def clean(self):
+        super().clean()
+        for step, prev_step in zip(forms[1:], forms):
+            step_1 = prev_step.save(commit=False)
+            step_2 = step.save(commit=False)
+            if step_1.destination != step_2.origin:
+                forms.ValidationError(_('Origin must be equal to previous destination'), code='error1')
+            if step_1.hour_destination >= step_2.hour_origin:
+                forms.ValidationError(_('Departure hour must be later then previous arrival hour'), code='error2')
+
+        raise forms.ValidationError([
+                forms.ValidationError(_('Origin must be equal to previous destination'), code='error1'),
+                forms.ValidationError(_('Departure hour must be later then previous arrival hour'), code='error2'),])
 
 
 class UserForm(UserCreationForm):
