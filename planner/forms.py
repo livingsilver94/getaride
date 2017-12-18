@@ -90,6 +90,6 @@ class ContactUsForm(forms.Form):
                                                                                 'class': 'form-control',
                                                                                 }))
 
-    # good pratice impose 78 max charlenght for subject
+    # good pratice impose 78 max char_length for subject
     subject = forms.CharField(max_length=70, required=True)
     message = forms.CharField(widget=forms.Textarea, required=True)

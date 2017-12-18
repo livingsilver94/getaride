@@ -18,7 +18,7 @@
         <h2> Viaggi a cui hai preso parte:</h2><br>
         {% for trip in trip_list %}
             <span>
-        <a href="#" class="list-group-item">
+        <div class="list-group-item">
             <h4 class="list-group-item-heading">
                 {% for step in trip %}
                     {{ step.origin.name|add:" -> " }}
@@ -28,8 +28,8 @@
                 {% endwith %}
                 - {{ trip.0.hour_origin }} : {{ trip.0.hour_destination }}
             </h4>
-            <p class="list-group-item-text"> <span>{{ trip.0.trip.date_origin }}</span>; max_num_passengers: {{ trip.0.trip.max_num_passengers }} ; max price:{{ trip.0.max_price}} </p>
-        </a><br>
+            <p class="list-group-item-text"> <span>{{ trip.0.trip.date_origin }}</span></p>
+        </div><br>
         </span>
         {% empty %}
             <li>Non hai ancora preso parte a nessun viaggio.</li>

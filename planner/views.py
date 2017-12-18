@@ -23,7 +23,6 @@ from django.shortcuts import render, redirect
 from .forms import ContactUsForm
 
 
-
 class HomePageView(TemplateView):
     """
     Homepage view.
@@ -257,8 +256,6 @@ class UserProfileView(TemplateView):
         return redirect('planner:homepage')
 
 
-
-
 def contact_us(request):
     if request.method == 'GET':
         form = ContactUsForm()
@@ -268,11 +265,11 @@ def contact_us(request):
             subject = form.cleaned_data['subject']
             from_email = form.cleaned_data['from_email']
             message = form.cleaned_data['message']
-            msg = "from user: " + from_email + "msg: " +  message
+            msg = 'from user: {} msg: {}'.format(request.user.email if request.user else from_email, message)
             try:
-                send_mail(subject, msg , from_email, [ settings.EMAIL_HOST_USER])
+                send_mail(subject, msg, from_email, [settings.EMAIL_HOST_USER])
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
-            messages.info(request, 'Your email has been send successfully!')
+            messages.info(request, 'Your email has been sent successfully!')
             return redirect('planner:homepage')
-    return render(request, "planner/ContactUs.html", {'form': form})
+    return render(request, 'planner/contact_us.html', {'form': form})

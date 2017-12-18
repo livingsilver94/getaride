@@ -128,20 +128,11 @@ LEAFLET_CONFIG = {
 
 
 
-
-
-
-#For email
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-EMAIL_USE_TLS = True
-
-EMAIL_HOST = 'smtp.gmail.com'
-
-EMAIL_HOST_USER = private_settings.smtp_user
-
-EMAIL_HOST_PASSWORD =  private_settings.psw
-
-EMAIL_PORT = 587
-
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+#Email settings
+EMAIL_BACKEND = private_settings.email['EMAIL_BACKEND']
+EMAIL_USE_TLS = private_settings.email['EMAIL_USE_TLS']
+EMAIL_HOST = private_settings.email['EMAIL_HOST']
+EMAIL_HOST_USER = private_settings.email['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD =  private_settings.email['EMAIL_HOST_PASSWORD']
+EMAIL_PORT  = private_settings.email['EMAIL_PORT']
+DEFAULT_FROM_EMAIL = private_settings.email['DEFAULT_FROM_EMAIL']
