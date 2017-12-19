@@ -2,7 +2,8 @@
 {% load leaflet_tags %}
 {% load static %}
 
-{% block title %}getaRide{% if user.is_authenticated %} - {{ user.first_name }} {{ user.last_name }}{% endif %}{% endblock %}
+{% block title %}getaRide{% if user.is_authenticated %} - {{ user.first_name }} {{ user.last_name }}
+{% endif %}{% endblock %}
 {% block head %}
     {% leaflet_css %}
     {% leaflet_js %}
@@ -11,7 +12,9 @@
     <script src="{% static 'planner/js/get_map_var.js' %}"></script>
     <script src="https://cdn.rawgit.com/moment/moment/2.19.1/min/moment.min.js"></script>
     <script src="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.17.45/build/js/bootstrap-datetimepicker.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.17.45/build/css/bootstrap-datetimepicker.min.css" type="text/css">
+    <link rel="stylesheet"
+          href="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.17.45/build/css/bootstrap-datetimepicker.min.css"
+          type="text/css">
 {% endblock %}
 {% block content %}
     <main class="container">
@@ -19,5 +22,6 @@
         <div class="map col-lg-6" id="map" style="height: 500px;">
             Map
         </div>
+
     </main>
 {% endblock %}
