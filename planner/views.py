@@ -273,3 +273,20 @@ def contact_us(request):
             messages.info(request, 'Your email has been sent successfully!')
             return redirect('planner:homepage')
     return render(request, 'planner/contact_us.html', {'form': form})
+
+
+
+
+
+def error404(request):
+    template_name = 'planner/error_404.html'
+    data = {}
+    # status_code = 404
+    return render(request, template_name, data)
+
+def error403(request):
+    template_name = 'planner/error_403.html'
+    data = {}
+    # status_code = 403
+    return render(request, template_name, data)
+
