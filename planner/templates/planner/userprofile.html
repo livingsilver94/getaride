@@ -6,10 +6,10 @@
     </span>
     <div>
         {% if driving_license_form %}
-            <form method="post" action="{% url 'planner:user-profile' user_id=user.pk %}">
+            <form class="userprofile-form" method="post" action="{% url 'planner:user-profile' user_id=user.pk %}">
                 {% csrf_token %}
                 {{ driving_license_form.as_p }}
-                <input type="submit"/>
+                <input id="newtrip-button" class="btn-success" type="submit" style="margin-left: 5px;"/>
             </form>
         {% endif %}
     </div>
