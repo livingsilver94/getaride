@@ -15,9 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from django.conf import settings
-import os
-from django.views.static import serve as staticserve
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
