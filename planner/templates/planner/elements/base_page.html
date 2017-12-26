@@ -17,10 +17,11 @@
 {% endif %}
 {% block content %}Page content{% endblock %}
 
-<footer class="footer">
+<footer class="navbar-default navbar-fixed-bottom">
     <div id="footer-icon">
         <i id="icon-user" class="fa fa-users fa-4x" aria-hidden="true"></i>
-        <a href="{% url 'planner:contact-us'%}"><i id="icon-envelope" class="fa fa-envelope fa-4x" aria-hidden="true"></i></a>
+        <a href="{% url 'planner:contact-us' %}"><i id="icon-envelope" class="fa fa-envelope fa-4x"
+                                                    aria-hidden="true"></i></a>
         <i id="icon-comments" class="fa fa-comments fa-4x" aria-hidden="true"></i>
     </div>
 </footer>

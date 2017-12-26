@@ -13,8 +13,12 @@
     background-color: white;
 }
 
-h1{
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+html, body {
+    height: 100%;
+}
+
+h1 {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #666666;
 }
 
@@ -74,10 +78,7 @@ h3 {
     padding-top: 20px;
 }
 
-footer {
-    clear: both;
-    position: absolute;
-    bottom: 0;
+.navbar-default.navbar-fixed-bottom {
     background: linear-gradient(to right, #6bc49b, palegreen);
     color: aquamarine;
     width: 100%;
@@ -92,7 +93,6 @@ footer {
     border: #6bc49b;
     border-radius: 4px;
     box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
-
 
 }
 
@@ -187,19 +187,19 @@ form.newtrip-form input {
     box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
 }
 
-#newtrip-loop{
+#newtrip-loop {
     background: linear-gradient(to right, #6bc49b00, palegreen);
     border-radius: 10px;
 }
 
-.step-delete{
+.step-delete {
     background: mediumseagreen;
     opacity: 0.8;
     box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
 }
 
-.step-add{
-     background: mediumseagreen;
+.step-add {
+    background: mediumseagreen;
     opacity: 0.8;
     box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
 }
@@ -210,14 +210,14 @@ form.newtrip-form input {
 
 }
 
-form.mail-form input{
+form.mail-form input {
     width: 500px;
 }
 
-form.mail-form label{
+form.mail-form label {
     padding: 2px;
 }
 
-form.userprofile-form p{
+form.userprofile-form p {
     margin-left: 3%;
 }
