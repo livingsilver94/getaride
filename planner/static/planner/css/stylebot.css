@@ -13,6 +13,11 @@
     background-color: white;
 }
 
+h1{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: #666666;
+}
+
 h2 {
     color: #666666;
 }
@@ -203,4 +208,16 @@ form.newtrip-form input {
     background: mediumseagreen;
     opacity: 1;
 
+}
+
+form.mail-form input{
+    width: 500px;
+}
+
+form.mail-form label{
+    padding: 2px;
+}
+
+form.userprofile-form p{
+    margin-left: 3%;
 }

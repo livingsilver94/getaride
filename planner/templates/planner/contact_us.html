@@ -3,11 +3,13 @@
 {% endblock %}
 {% block content %}
     <h1>Contact Us</h1>
-    <form method="post">
+    <form class="mail-form" method="post">
+        <div>
         {% csrf_token %}
         {{ form.as_p }}
+            </div>
         <div class="form-actions">
-            <button type="submit">Send</button>
+            <button class="btn-success" id="newtrip-button" style="margin-left: 25%; margin-right: 25%">Send</button>
         </div>
     </form>
 
