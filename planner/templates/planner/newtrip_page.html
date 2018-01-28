@@ -13,6 +13,7 @@
         {{ formset.management_form }}
        <div id="newtrip-loop"> {% for form_loop in formset %}
             <div class="inline {{ formset.prefix }}">
+                {% if forms.errors %}{% endif %}
                 {{ form_loop.as_p }}
             </div>
         {% endfor %}

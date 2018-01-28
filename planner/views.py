@@ -10,7 +10,6 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import TemplateView, View, CreateView, ListView
 from users.models import User
-
 from getaride import settings
 from django.db import IntegrityError
 from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet, DrivingLicenseForm
@@ -150,6 +149,7 @@ class NewTripView(CreateView):
         if formset.is_valid() and form.is_valid():
             return self.form_valid(form, formset)
         else:
+            messages.error(request, 'Origin must be equal to previous destination')
             return self.form_invalid(form, formset)
 
     def form_valid(self, form, formset):

@@ -3,7 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.validators import MinLengthValidator
 from django.forms.models import inlineformset_factory
 from users.forms import UserCreationForm
-
+from django.contrib import messages
 from planner.models import PoolingUser, Trip, Step
 
 
@@ -65,15 +65,13 @@ class StepForm(forms.ModelForm):
 class StepFormSet(inlineformset_factory(parent_model=Trip, model=Step, form=StepForm, can_delete=False, min_num=1, extra=0,
                                     validate_min=1)):
 
-    def clean(self):
+    def is_valid(self):
         for step, prev_step in zip(self.forms[1:], self.forms):
             step_1 = prev_step.save(commit=False)
             step_2 = step.save(commit=False)
             if step_1.destination != step_2.origin:
-                raise forms.ValidationError('Origin must be equal to previous destination')
-            if step_1.hour_destination >= step_2.hour_origin:
-                raise forms.ValidationError('Departure hour must be later then previous arrival hour')
-        return self
+                return False
+        return True
 
 
 
