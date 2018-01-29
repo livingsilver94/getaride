@@ -8,8 +8,8 @@ $(function () {
         prefix: formset_prefix, // The form prefix for your django formset
         addCssClass: "btn btn-success btn-block step-add", // CSS class applied to the add link
         deleteCssClass: "btn btn-success btn-block step-delete", // CSS class applied to the delete link
-        addText: 'Add another question', // Text for the add link
-        deleteText: 'Remove question above', // Text for the delete link
+        addText: 'Add another step', // Text for the add link
+        deleteText: 'Remove step above', // Text for the delete link
         formCssClass: 'inline-form', // CSS class applied to each form in a formset
         added: function (row) {
             add_autocomplete(row);
