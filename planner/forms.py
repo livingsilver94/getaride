@@ -3,7 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.validators import MinLengthValidator
 from django.forms.models import inlineformset_factory
 from users.forms import UserCreationForm
-from django.contrib import messages
+
 from planner.models import PoolingUser, Trip, Step
 
 

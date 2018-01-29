@@ -14,8 +14,7 @@ from getaride import settings
 from django.db import IntegrityError
 from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet, DrivingLicenseForm
 from planner.models import Trip, Step
-#
-# from django.core.mail import EmailMessage
+
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
