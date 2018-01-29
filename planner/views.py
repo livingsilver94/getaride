@@ -15,6 +15,12 @@ from getaride import settings
 from django.db import IntegrityError
 from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet, DrivingLicenseForm
 from planner.models import Trip, Step
+#
+# from django.core.mail import EmailMessage
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
+from .forms import ContactUsForm
 
 
 class HomePageView(TemplateView):
@@ -248,3 +254,39 @@ class UserProfileView(TemplateView):
             license_form.save()
             messages.success(request, _('Driving license code successfully added/changed'))
         return redirect('planner:homepage')
+
+
+def contact_us(request):
+    if request.method == 'GET':
+        form = ContactUsForm()
+    else:
+        form = ContactUsForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            from_email = form.cleaned_data['from_email']
+            message = form.cleaned_data['message']
+            msg = 'from user: {} msg: {}'.format(request.user.email if request.user else from_email, message)
+            try:
+                send_mail(subject, msg, from_email, [settings.EMAIL_HOST_USER])
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            messages.info(request, 'Your email has been sent successfully!')
+            return redirect('planner:homepage')
+    return render(request, 'planner/contact_us.html', {'form': form})
+
+
+
+
+
+def error404(request):
+    template_name = 'planner/error_404.html'
+    data = {}
+    # status_code = 404
+    return render(request, template_name, data)
+
+def error403(request):
+    template_name = 'planner/error_403.html'
+    data = {}
+    # status_code = 403
+    return render(request, template_name, data)
+

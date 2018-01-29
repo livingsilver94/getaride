@@ -6,7 +6,49 @@
 }
 
 .navbar-brand {
-    padding: 0px;
+    padding: 0;
+}
+
+.container-fluid {
+    background-color: white;
+}
+
+html, body {
+    height: 100%;
+}
+
+h1 {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #666666;
+}
+
+h2 {
+    color: #666666;
+}
+
+h3 {
+    color: #666666;
+    font-size: 22px;
+}
+
+#newtrip-submit {
+    background: linear-gradient(to right, #6bc49b, palegreen);
+    border: #6bc49b;
+    border-radius: 4px;
+    padding: 5px;
+    width: 80px;
+    margin-left: 15px;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+
+}
+
+.homepage-newtrip {
+    width: 450px;
+    display: inline-block;
+}
+
+.nav.navbar-nav.navbar-right {
+    color: #666666;
 }
 
 .dropdown-form {
@@ -18,26 +60,164 @@
     z-index: 100 !important;
 }
 
-.footer {
-    color: aquamarine;
-}
-
-#map{
+#map {
     border: 1px solid #ccc;
+    top: 22px;
 }
 
-.sign-form{
-    height: 50%;
-    margin-left:10px;
-
-}
-
-.glyphicon.glyphicon-record{
+.glyphicon.glyphicon-record {
     color: palegreen;
 
 }
 
-#datetimepicker{
+.glyphicon.glyphicon-log-in {
+    color: palegreen;
+}
+
+#datetimepicker {
     padding-top: 20px;
 }
 
+.navbar-default.navbar-fixed-bottom {
+    background: linear-gradient(to right, #6bc49b, palegreen);
+    color: aquamarine;
+    width: 100%;
+    height: fit-content;
+}
+
+#loginform-submit {
+    width: 316px;
+    margin-top: 4px;
+    padding: 4px;
+    background: linear-gradient(to right, #6bc49b, palegreen);
+    border: #6bc49b;
+    border-radius: 4px;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+
+}
+
+#logname {
+    padding: 2px;
+}
+
+#logpass {
+    padding: 2px;
+}
+
+p {
+    padding: 4px;
+    margin-left: 25%;
+    margin-right: 25%;
+    width: 60%;
+    color: #666666;
+
+}
+
+.centered-container {
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+form.signform-form input {
+    width: 384px;
+}
+
+div.input-group input {
+    width: 201px;
+}
+
+#signform-submit {
+    margin-left: 25%;
+    margin-top: 12px;
+    background: linear-gradient(to right, #6bc49b, palegreen);
+    border: #6bc49b;
+    border-radius: 4px;
+    width: 89px;
+}
+
+#serchtrip-submit {
+    background: linear-gradient(to right, #6bc49b, palegreen);
+    border: #6bc49b;
+    border-radius: 4px;
+    margin-top: 10px;
+    padding: 6px;
+    width: 65px;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+}
+
+#icon-user {
+    margin-left: 41%;
+    padding-right: 35px;
+    color: mediumseagreen;
+    opacity: 0.8;
+}
+
+#icon-envelope {
+    padding-right: 35px;
+    color: mediumseagreen;
+    opacity: 0.8;
+}
+
+#icon-comments {
+    color: mediumseagreen;
+    opacity: 0.8;
+}
+
+.newtrip-form {
+    margin-left: 15%;
+    padding: 0;
+    display: inline-block;
+}
+
+form.newtrip-form input {
+    width: 300px;
+}
+
+#newtrip-div {
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+#newtrip-button {
+    background: linear-gradient(to right, #6bc49b, palegreen);
+    border: #6bc49b;
+    border-radius: 4px;
+    padding: 6px;
+    width: 80px;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+}
+
+#newtrip-loop {
+    background: linear-gradient(to right, #6bc49b00, palegreen);
+    border-radius: 10px;
+}
+
+.step-delete {
+    background: mediumseagreen;
+    opacity: 0.8;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+}
+
+.step-add {
+    background: mediumseagreen;
+    opacity: 0.8;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+}
+
+.step-delete:hover, .step-add:hover {
+    background: mediumseagreen;
+    opacity: 1;
+
+}
+
+form.mail-form input {
+    width: 500px;
+}
+
+form.mail-form label {
+    padding: 2px;
+}
+
+form.userprofile-form p {
+    margin-left: 3%;
+}

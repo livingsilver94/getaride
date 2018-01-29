@@ -16,7 +16,12 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('planner.urls')),
 ]
+
+# debug must be set to False to show error page
+handler403 = 'planner.views.error403'
+handler404 = 'planner.views.error404'

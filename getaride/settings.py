@@ -25,7 +25,7 @@ SECRET_KEY = private_settings.key
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -125,3 +125,14 @@ LEAFLET_CONFIG = {
     'MIN_ZOOM': 6,
     'MAX_ZOOM': 10,
 }
+
+
+
+#Email settings
+EMAIL_BACKEND = private_settings.email['EMAIL_BACKEND']
+EMAIL_USE_TLS = private_settings.email['EMAIL_USE_TLS']
+EMAIL_HOST = private_settings.email['EMAIL_HOST']
+EMAIL_HOST_USER = private_settings.email['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD =  private_settings.email['EMAIL_HOST_PASSWORD']
+EMAIL_PORT  = private_settings.email['EMAIL_PORT']
+DEFAULT_FROM_EMAIL = private_settings.email['DEFAULT_FROM_EMAIL']

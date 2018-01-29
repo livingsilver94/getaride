@@ -15,7 +15,7 @@ $(function () {
         useCurrent: true,
     }).on("dp.change", function (event) {
         document.getElementById("searchtrip_datetime").value = $('#datetimepicker').data('DateTimePicker').date().unix();
-    }).trigger("changeDate").show();
+    }).trigger("dp.change").show();
 });
 
 var marker_state = 0;

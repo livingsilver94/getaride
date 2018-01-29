@@ -90,3 +90,15 @@ class DrivingLicenseForm(forms.ModelForm):
     class Meta:
         model = PoolingUser
         fields = ['driving_license']
+
+
+
+
+class ContactUsForm(forms.Form):
+    from_email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'placeholder': 'Email',
+                                                                                'class': 'form-control',
+                                                                                }))
+
+    # good pratice impose 78 max char_length for subject
+    subject = forms.CharField(max_length=70, required=True)
+    message = forms.CharField(widget=forms.Textarea, required=True)

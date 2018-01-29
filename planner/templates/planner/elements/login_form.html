@@ -1,6 +1,6 @@
 <form method="post" action="{% url 'planner:user-login' %}">
     {% csrf_token %}
-    <div class="input-group input-group-lg">
+    <div id="logname" class="input-group input-group-lg">
         <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i> </span>
         {% if login_form.username %}
             {{ login_form.username }}
@@ -8,13 +8,13 @@
             {{ form.username }}
         {% endif %}
     </div>
-    <div class="input-group input-group-lg">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i> </span>
+    <div id="logpass" class="input-group input-group-lg">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i> </span>
         {% if login_form.password %}
             {{ login_form.password }}
         {% else %}
             {{ form.password }}
         {% endif %}
     </div>
-    <button class="btn btn-primary btn-block">Login</button>
+    <button class="btn-success" id="loginform-submit">Login</button>
 </form>
