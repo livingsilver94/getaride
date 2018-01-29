@@ -6,6 +6,9 @@
     {{ formset.media }}
 {% endblock %}
 {% block content %}
+    {% if formset.non_form_errors %}
+        {{ formset.non_form_errors }}
+    {% endif %}
     <form action="{% url 'planner:trip-create' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}

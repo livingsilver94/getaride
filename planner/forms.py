@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.validators import MinLengthValidator
 from django.forms.models import inlineformset_factory
+from django.utils.translation import ugettext_lazy as _
 from users.forms import UserCreationForm
 
 from planner.models import PoolingUser, Trip, Step
@@ -62,22 +63,16 @@ class StepForm(forms.ModelForm):
         }
 
 
-class StepFormSet(inlineformset_factory(parent_model=Trip, model=Step, form=StepForm, can_delete=False, min_num=1, extra=0,
-                                    validate_min=1)):
+class StepFormSet(inlineformset_factory(parent_model=Trip, model=Step, form=StepForm,
+                                        can_delete=False, min_num=1, extra=0, validate_min=1)):
 
     def clean(self):
         super().clean()
-        for step, prev_step in zip(forms[1:], forms):
-            step_1 = prev_step.save(commit=False)
-            step_2 = step.save(commit=False)
-            if step_1.destination != step_2.origin:
-                forms.ValidationError(_('Origin must be equal to previous destination'), code='error1')
-            if step_1.hour_destination >= step_2.hour_origin:
-                forms.ValidationError(_('Departure hour must be later then previous arrival hour'), code='error2')
-
-        raise forms.ValidationError([
-                forms.ValidationError(_('Origin must be equal to previous destination'), code='error1'),
-                forms.ValidationError(_('Departure hour must be later then previous arrival hour'), code='error2'),])
+        for form, prev_form in zip(self.forms[1:], self.forms):
+            step = form.save(commit=False)
+            prev_step = prev_form.save(commit=False)
+            if step.hour_origin < prev_step.hour_destination:
+                raise forms.ValidationError(_("The steps you specified don't follow a proper timeline."))
 
 
 class UserForm(UserCreationForm):
