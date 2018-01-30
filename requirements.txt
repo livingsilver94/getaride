@@ -1,5 +1,4 @@
-django==1.11.4
+django>=1.11, <2.0
 django-cities-light
 django-leaflet
 django-email-users
-mysqlclient
