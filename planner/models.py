@@ -39,6 +39,39 @@ class Trip(models.Model):
         if except_dict:
             raise valids.ValidationError(except_dict)
 
+
+class FreeStepManager(models.Manager):
+    join_limit = datetime.timedelta(days=1)
+
+    def get_queryset(self):
+        return super().get_queryset().annotate(models.Count('passengers')).filter(
+            passengers__count__lt=models.F('trip__max_num_passengers')).filter(
+            trip__date_origin__gte=datetime.datetime.now() + self.join_limit)
+
+
+class Step(models.Model):
+    objects = models.Manager()
+    free = FreeStepManager()
+
+    origin = models.ForeignKey(City, related_name='city_origin')
+    destination = models.ForeignKey(City, related_name='city_destination')
+    hour_origin = models.TimeField()
+    hour_destination = models.TimeField()
+    passengers = models.ManyToManyField(PoolingUser)
+    max_price = models.DecimalField(decimal_places=2, max_digits=5, validators=[valids.MinValueValidator(0.01)])
+    trip = models.ForeignKey(Trip, related_name='trip')
+    order = models.PositiveIntegerField(default=0)
+
+    def clean(self):
+        except_dict = dict()
+        if self.hour_destination and self.hour_origin:
+            if self.hour_destination <= self.hour_origin:
+                except_dict.update({'hour_destination': _("Estimated arrival hour must be later than departure hour")})
+            if self.destination == self.origin:
+                except_dict.update({'destination': _("Your destination must be different from origin")})
+        if except_dict:
+            raise valids.ValidationError(except_dict)
+
     @staticmethod
     def group_by_trip(step_list):
         """
@@ -63,7 +96,7 @@ class Trip(models.Model):
         """
         orig = origin.pk if issubclass(origin.__class__, Step) else origin
         dest = destination.pk if issubclass(destination.__class__, Step) else destination
-        for step_list in Trip.group_by_trip(step_list):
+        for step_list in Step.group_by_trip(step_list):
             success = True
             if len(step_list) == 1:
                 if orig is None or dest is None:
@@ -78,59 +111,3 @@ class Trip(models.Model):
             if success:
                 yield step_list
 
-
-class StepManager(models.Manager):
-    join_limit = datetime.timedelta(days=1)
-
-    def get_queryset(self):
-        return super().get_queryset().annotate(models.Count('passengers')).filter(
-            passengers__count__lt=models.F('trip__max_num_passengers')).filter(
-            trip__date_origin__gte=datetime.datetime.now() + self.join_limit)
-
-
-class Step(models.Model):
-    objects = models.Manager()
-    free = StepManager()
-
-    origin = models.ForeignKey(City, related_name='city_origin')
-    destination = models.ForeignKey(City, related_name='city_destination')
-    hour_origin = models.TimeField()
-    hour_destination = models.TimeField()
-    passengers = models.ManyToManyField(PoolingUser)
-    max_price = models.DecimalField(decimal_places=2, max_digits=5, validators=[valids.MinValueValidator(0.01)])
-    trip = models.ForeignKey(Trip, related_name='trip')
-    order = models.PositiveIntegerField(default=0)
-
-    def clean(self):
-        except_dict = dict()
-        if self.hour_destination and self.hour_origin:
-            if self.hour_destination <= self.hour_origin:
-                except_dict.update({'hour_destination': _("Estimated arrival hour must be later than departure hour")})
-            if self.destination == self.origin:
-                except_dict.update({'destination': _("Your destination must be different from origin")})
-        if except_dict:
-            raise valids.ValidationError(except_dict)
-
-    @staticmethod
-    def get_valid_interval_minutes(datetm, range_minutes):
-        """
-        Get time_min and time_max based on a given datetime and a range in minutes. If time+range or time-range overflow
-        to the previous or the next day, time_min and time_max will be midnight or 23:59, respectively.
-
-        :param datetime.datetime datetm: A considered datetime
-        :param int range_minutes: minutes to add and subtract to datetm
-        :return: time_min and time_max
-        :rtype: tuple
-        """
-        range_minutes = datetime.timedelta(minutes=range_minutes)
-        time_min = datetm - range_minutes
-        if time_min.date() < datetm.date():
-            time_min = datetime.time(0, 0)
-        else:
-            time_min = time_min.time()
-        time_max = datetm + range_minutes
-        if time_max.date() > datetm.date():
-            time_max = datetime.time(23, 59)
-        else:
-            time_max = time_max.time()
-        return time_min, time_max

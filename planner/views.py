@@ -44,13 +44,40 @@ class SearchTripView(ListView):
 
     def get_queryset(self):
         datetm = datetime.datetime.fromtimestamp(float(self.request.GET['datetime']))
-        time_min, time_max = Step.get_valid_interval_minutes(datetm, 30)
+        time_min, time_max = SearchTripView.get_time_interval(datetm.time(), minutes=30)
         origin = self.request.GET['origin']
         destination = self.request.GET['destination']
         q_res = Step.free.filter(
             Q(destination=destination) | Q(origin=origin, hour_origin__range=(time_min, time_max)),
             trip__date_origin=datetm.date()).order_by('trip', 'order')
-        return Trip.filter_consecutive_steps(q_res, origin=origin, destination=destination)
+        return Step.filter_consecutive_steps(q_res, origin=origin, destination=destination)
+
+    @staticmethod
+    def get_time_interval(time, hours=0, minutes=0):
+        """
+        Get time_min and time_max based on a given datetime and a range in minutes. If time-range or time+range overflow
+        to the previous or the next day, time_min and time_max will be midnight or 23:59, respectively.
+
+        :param time: A considered time
+        :param int hours: hours to add and subtract to time
+        :param int minutes: minutes to add and subtract to time
+        :return: time_min and time_max
+        :rtype: tuple
+        """
+        ret = []
+        datetime_minus = datetime.datetime.combine(datetime.date.today(), time) - datetime.timedelta(hours=hours,
+                                                                                                     minutes=minutes)
+        datetime_plus = datetime.datetime.combine(datetime.date.today(), time) + datetime.timedelta(hours=hours,
+                                                                                                    minutes=minutes)
+        if datetime_minus.date() < datetime.datetime.today().date():
+            ret.append(datetime.time(0, 0))
+        else:
+            ret.append(datetime_minus.time())
+        if datetime_plus.date() > datetime.datetime.today().date():
+            ret.append(datetime.time(23, 59))
+        else:
+            ret.append(datetime_plus.time())
+        return tuple(ret)
 
 
 class JoinTripView(View):
@@ -245,7 +272,7 @@ class UserProfileView(TemplateView):
             else:
                 trip_list = Step.objects.filter(trip__driver=usr.poolinguser.pk)
         context['viewed_user'] = usr
-        context['trip_list'] = list(Trip.group_by_trip(trip_list.select_related('trip').order_by('trip')))
+        context['trip_list'] = list(Step.group_by_trip(trip_list.select_related('trip').order_by('trip')))
         return context
 
     def post(self, request, user_id):
@@ -275,18 +302,15 @@ def contact_us(request):
     return render(request, 'planner/contact_us.html', {'form': form})
 
 
-
-
-
 def error404(request):
     template_name = 'planner/error_404.html'
     data = {}
     # status_code = 404
     return render(request, template_name, data)
 
+
 def error403(request):
     template_name = 'planner/error_403.html'
     data = {}
     # status_code = 403
     return render(request, template_name, data)
-
