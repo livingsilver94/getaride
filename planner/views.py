@@ -1,26 +1,22 @@
 import datetime
+import os
 
 from cities_light.models import City
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from django.db import transaction
-from django.db.models import Q, Count, F
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, render, redirect
+from django.core.mail import send_mail, BadHeaderError
+from django.db import IntegrityError, transaction
+from django.db.models import Count, F
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import TemplateView, View, CreateView, ListView
 from users.models import User
 
 from getaride import settings
-from django.db import IntegrityError
-from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet, DrivingLicenseForm
+from planner.forms import SearchTrip, LoginForm, PoolingUserForm, UserForm, TripForm, StepFormSet, DrivingLicenseForm, \
+    ContactUsForm
 from planner.models import Trip, Step
-#
-# from django.core.mail import EmailMessage
-from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
-from .forms import ContactUsForm
 
 
 class HomePageView(TemplateView):
@@ -41,15 +37,15 @@ class SearchTripView(ListView):
     View to display results of a trip search.
     """
     template_name = 'planner/searchtrip.html'
+    with open(os.path.join(settings.BASE_DIR, 'planner/sql/raw_trip_search.sql'), mode='r') as sql_file:
+        search_query = sql_file.read()
 
     def get_queryset(self):
         datetm = datetime.datetime.fromtimestamp(float(self.request.GET['datetime']))
         time_min, time_max = SearchTripView.get_time_interval(datetm.time(), minutes=30)
         origin = self.request.GET['origin']
         destination = self.request.GET['destination']
-        q_res = Step.free.filter(
-            Q(destination=destination) | Q(origin=origin, hour_origin__range=(time_min, time_max)),
-            trip__date_origin=datetm.date()).order_by('trip', 'order')
+        q_res = Step.free.raw(self.search_query, [destination, origin, time_min, time_max, datetm.date()])
         return Step.filter_consecutive_steps(q_res, origin=origin, destination=destination)
 
     @staticmethod
@@ -98,7 +94,7 @@ class JoinTripView(View):
         try:
             raw_steps = Step.free.filter(trip=trip_id, order__range=(step_min, step_max)).annotate(
                 trip__max_num_passengers=F('trip__max_num_passengers')).annotate(Count('passengers'))
-            steps = list(Trip.filter_consecutive_steps(raw_steps))[0]
+            steps = list(Step.filter_consecutive_steps(raw_steps))[0]
             with transaction.atomic():
                 for step in steps:
                     step.passengers.add(self.request.user.poolinguser)
