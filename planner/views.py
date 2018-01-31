@@ -46,7 +46,13 @@ class SearchTripView(ListView):
         origin = self.request.GET['origin']
         destination = self.request.GET['destination']
         q_res = Step.free.raw(self.search_query, [destination, origin, time_min, time_max, datetm.date()])
-        return Step.filter_consecutive_steps(q_res, origin=origin, destination=destination)
+        ret = []
+        for trip in Step.filter_consecutive_steps(q_res, origin=origin, destination=destination):
+            max_price = 0
+            for step in trip:
+                max_price += step.max_price
+            ret.append({'steps': trip, 'max_price': max_price})
+        return ret
 
     @staticmethod
     def get_time_interval(time, hours=0, minutes=0):
