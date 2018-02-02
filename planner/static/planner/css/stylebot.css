@@ -181,6 +181,7 @@ form.newtrip-form input {
 #newtrip-button {
     background: linear-gradient(to right, #6bc49b, palegreen);
     border: #6bc49b;
+    margin-bottom: 80px;
     border-radius: 4px;
     padding: 6px;
     width: 80px;
