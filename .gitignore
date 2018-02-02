@@ -105,3 +105,4 @@ getaride/private_settings.py
 .idea/
 mydatabase
 mydatabase.sqlite3
+planner/static/planner/js/private_settings.js

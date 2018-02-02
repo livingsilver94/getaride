@@ -46,3 +46,4 @@ class TripTest(TestCase):
         self.assertRaises(ValidationError, lambda: trip.clean())
         trip.date_origin = datetime.now().date() + timedelta(days=1)
         self.assertIsNone(trip.clean())
+

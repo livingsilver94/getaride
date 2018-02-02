@@ -20,7 +20,7 @@ $(function () {
 
 var marker_state = 0;
 var markers = new Array();
-var router = L.Routing.mapbox('pk.eyJ1IjoiYm9uaXMiLCJhIjoiY2o5NWNmNzFsMWZ5ZDMzbXc4cHU2YndrcSJ9.QZy2V8z1VZQyOqwGfab4Rw');
+var router = L.Routing.mapbox(token);
 
 var greenIcon = new L.Icon({
     iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
