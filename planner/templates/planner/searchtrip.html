@@ -2,7 +2,10 @@
 {% block head %}
 {% endblock %}
 {% block content %}
-    <h2> Risultati per la ricerca effettuata:</h2><br>
+    <h2> Risultati per la ricerca effettuata:</h2><br/>
+    {% if not object_list   %}
+        <h3>Viaggio non trovato,inserisci altri parametri di ricerca.</h3>
+    {% endif %}
     {% for dict in object_list %}
         <div class="trip_result">
             <span>
@@ -26,4 +29,5 @@
                 </form><br>
         </div>
     {% endfor %}
+
 {% endblock %}
