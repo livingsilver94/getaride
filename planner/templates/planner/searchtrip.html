@@ -5,9 +5,7 @@
     <h2> Risultati per la ricerca effettuata:</h2><br/>
     {% if not object_list   %}
         <h3>Viaggio non trovato,inserisci altri parametri di ricerca.</h3>
-        <a href="{% url 'planner:homepage' %}">
-            <button id="newtrip-button" class="btn-success" >Torna alla Home</button>
-        </a>
+
     {% endif %}
     {% for dict in object_list %}
         <div class="trip_result">
