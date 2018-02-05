@@ -7,21 +7,19 @@ from django.test import TestCase, RequestFactory, Client
 from django.contrib.sessions.middleware import SessionMiddleware
 from .models import PoolingUser, Step, Trip
 from .validators import validate_adult
-from .views import HomePageView, JoinTripView, SearchTripView
+from .views import HomePageView, JoinTripView, SearchTripView, UserProfileView, SignupView, contact_us
+from django.template.response import TemplateResponse
+from users.models import User
+import unittest
 
 
 class PoolingUserTest(TestCase):
-    # def create_User(self):
-    #     return User.objects.create()
+    def create_User(self):
+         return User.objects.create(email='user@mp.com', password='user')
 
 
     def create_PoolingUser(self):
-        return PoolingUser.objects.create(birth_date='1987-1-1', base_user_id=0)
-
-
-    def test_PoolingUser_creation(self):
-        usr = self.create_PoolingUser()
-        self.assertTrue(isinstance(usr, PoolingUser))
+        return PoolingUser.objects.create(birth_date='1987-1-1', base_user_id=self.create_User().id)
 
 
     def test_not_a_driver_by_default(self):
@@ -38,10 +36,9 @@ class PoolingUserTest(TestCase):
         self.assertRaises(ValidationError, lambda: validate_adult(datetime.today()))
         self.assertIsNone(validate_adult(datetime(1999, 2, 2)))
 
-    def test_cellphon_number_valid(self):
+    def test_set_cellphone_number(self):
         usr = self.create_PoolingUser()
         usr.cellphone_number = '3290041245'
-        self.assertTrue(usr.cellphone_number)
         self.assertEqual(usr.cellphone_number, '3290041245' )
 
 
@@ -62,4 +59,5 @@ class TripTest(TestCase):
         self.assertRaises(ValidationError, lambda: trip.clean())
         trip.date_origin = datetime.now().date() + timedelta(days=1)
         self.assertIsNone(trip.clean())
+
 
