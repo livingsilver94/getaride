@@ -14,25 +14,50 @@
         {% endif %}
     </div>
 
-    <div class="list-group">
-        <h2> Viaggi a cui hai preso parte:</h2><br>
-        {% for trip in trip_list %}
+    {% if passenger_trip_list %}
+        <div class="list-group">
+            <h2> Viaggi a cui hai preso parte</h2><br>
+            {% for trip in passenger_trip_list %}
+                <div class="trip_result">
             <span>
-        <div class="list-group-item">
+            <div class="list-group-item">
             <h4 class="list-group-item-heading">
-                {% for step in trip %}
-                    {{ step.origin.name|add:" -> " }}
-                {% endfor %}
+            {% for step in trip %}
+                {{ step.origin.name|add:" 🢡 " }}
+            {% endfor %}
                 {% with trip|last as last %}
                     {{ last.destination.name }}
+                    </h4>
+                    <p class="list-group-item-text"><span>Dalle {{ trip.0.hour_origin }} alle {{ last.hour_destination }}</span></p>
+                    </div>
+                    </span>
                 {% endwith %}
-                - {{ trip.0.hour_origin }} : {{ trip.0.hour_destination }}
-            </h4>
-            <p class="list-group-item-text"> <span>{{ trip.0.trip.date_origin }}</span></p>
-        </div><br>
-        </span>
-        {% empty %}
-            <li>Non hai ancora preso parte a nessun viaggio.</li>
-        {% endfor %}
-    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <br>
+    {% if driver_trip_list %}
+        <div class="list-group">
+            <h2> Viaggi come guidatore</h2><br>
+            {% for trip in driver_trip_list %}
+                <div class="trip_result">
+            <span>
+            <div class="list-group-item">
+            <h4 class="list-group-item-heading">
+            {% for step in trip %}
+                {{ step.origin.name|add:" 🢡 " }}
+            {% endfor %}
+                {% with trip|last as last %}
+                    {{ last.destination.name }}
+                    </h4>
+                    <p class="list-group-item-text"><span>Dalle {{ trip.0.hour_origin }} alle {{ last.hour_destination }}</span></p>
+                    </div>
+                    </span>
+                {% endwith %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
 {% endblock %}

@@ -263,18 +263,28 @@ class UserProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if int(kwargs['user_id']) == self.request.user.pk:
-            usr = self.request.user
+        usr = self.request.user if self.request.user.pk == int(kwargs['user_id']) else \
+            get_object_or_404(User, pk=kwargs['user_id'])
+        steps_as_passenger = None
+        steps_as_driver = None
+
+        if usr == self.request.user:
             context['driving_license_form'] = DrivingLicenseForm(instance=self.request.user.poolinguser)
-            trip_list = Step.objects.filter(passengers__id__exact=usr.poolinguser.pk)
+            steps_as_passenger = Step.objects.filter(passengers__id__exact=usr.poolinguser.id)
+            if usr.poolinguser.is_driver():
+                steps_as_driver = Step.objects.filter(trip__driver=usr.poolinguser).prefetch_related('passengers')
         else:
-            usr = get_object_or_404(User, pk=kwargs['user_id'])
             if not usr.poolinguser.is_driver():
                 raise PermissionDenied
             else:
-                trip_list = Step.objects.filter(trip__driver=usr.poolinguser.pk)
+                steps_as_driver = Step.objects.filter(trip__driver=usr.poolinguser)
         context['viewed_user'] = usr
-        context['trip_list'] = list(Step.group_by_trip(trip_list.select_related('trip').order_by('trip')))
+        if steps_as_driver:
+            context['driver_trip_list'] = list(
+                Step.group_by_trip(steps_as_driver.select_related('trip').order_by('trip')))
+        if steps_as_passenger:
+            context['passenger_trip_list'] = list(
+                Step.group_by_trip(steps_as_passenger.select_related('trip').order_by('trip')))
         return context
 
     def post(self, request, user_id):
