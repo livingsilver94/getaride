@@ -1,5 +1,11 @@
 {% extends "planner/elements/base_page.html" %}
-{% block head %}{% endblock %}
+{% block head %}
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+{% endblock %}
 {% block content %}
     <span>
         <h3>Nome utente:  {{ viewed_user.first_name }} {{ viewed_user.last_name }}</h3>
@@ -28,7 +34,7 @@
                 {% with trip|last as last %}
                     {{ last.destination.name }}
                     </h4>
-                    <p class="list-group-item-text"><span>Dalle {{ trip.0.hour_origin }} alle {{ last.hour_destination }}</span></p>
+                    <p class="list-group-item-text"><span>Dalle {{ trip.0.hour_origin }} alle {{ last.hour_destination }} | {{ last.trip.date_origin }}</span></p>
                     </div>
                     </span>
                 {% endwith %}
@@ -51,7 +57,10 @@
                 {% with trip|last as last %}
                     {{ last.destination.name }}
                     </h4>
-                    <p class="list-group-item-text"><span>Dalle {{ trip.0.hour_origin }} alle {{ last.hour_destination }}</span></p>
+                    <p class="list-group-item-text"><span>Dalle {{ trip.0.hour_origin }} alle {{ last.hour_destination }} | {{ last.trip.date_origin }}</span></p>
+                    <a href="#" title="Passeggeri" data-toggle="popover" data-trigger="hover" data-html="true"
+                       data-content="
+                               {% for step in trip %}{% for pass in step.passengers.all %}{{ pass.base_user.first_name }} {{ pass.base_user.last_name }}: {{ pass.cellphone_number }}<br>{% endfor %}<hr>{% endfor %}">Passeggeri</a>
                     </div>
                     </span>
                 {% endwith %}
